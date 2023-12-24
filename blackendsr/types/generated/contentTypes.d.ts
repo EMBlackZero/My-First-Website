@@ -362,6 +362,83 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiEntryEntry extends Schema.CollectionType {
+  collectionName: 'entries';
+  info: {
+    singularName: 'entry';
+    pluralName: 'entries';
+    displayName: 'Entry';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    result: Attribute.String;
+    users_permissions_users: Attribute.Relation<
+      'api::entry.entry',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    event: Attribute.Relation<
+      'api::entry.entry',
+      'oneToOne',
+      'api::event.event'
+    >;
+    seedate: Attribute.DateTime;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::entry.entry',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::entry.entry',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiEventEvent extends Schema.CollectionType {
+  collectionName: 'events';
+  info: {
+    singularName: 'event';
+    pluralName: 'events';
+    displayName: 'Event';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    datetime: Attribute.DateTime;
+    users_permissions_users: Attribute.Relation<
+      'api::event.event',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::event.event',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::event.event',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -707,6 +784,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    event: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToOne',
+      'api::event.event'
+    >;
+    entry: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToOne',
+      'api::entry.entry'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -778,6 +865,8 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::entry.entry': ApiEntryEntry;
+      'api::event.event': ApiEventEvent;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
