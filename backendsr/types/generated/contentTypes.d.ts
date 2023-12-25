@@ -374,17 +374,11 @@ export interface ApiEntryEntry extends Schema.CollectionType {
   };
   attributes: {
     result: Attribute.String;
-    users_permissions_users: Attribute.Relation<
+    users_permissions_user: Attribute.Relation<
       'api::entry.entry',
-      'oneToMany',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
-    event: Attribute.Relation<
-      'api::entry.entry',
-      'oneToOne',
-      'api::event.event'
-    >;
-    seedate: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -416,9 +410,9 @@ export interface ApiEventEvent extends Schema.CollectionType {
   attributes: {
     name: Attribute.String;
     datetime: Attribute.DateTime;
-    users_permissions_users: Attribute.Relation<
+    users_permissions_user: Attribute.Relation<
       'api::event.event',
-      'oneToMany',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
@@ -784,14 +778,14 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    event: Attribute.Relation<
+    events: Attribute.Relation<
       'plugin::users-permissions.user',
-      'manyToOne',
+      'oneToMany',
       'api::event.event'
     >;
-    entry: Attribute.Relation<
+    entries: Attribute.Relation<
       'plugin::users-permissions.user',
-      'manyToOne',
+      'oneToMany',
       'api::entry.entry'
     >;
     createdAt: Attribute.DateTime;

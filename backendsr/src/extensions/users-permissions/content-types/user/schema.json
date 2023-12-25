@@ -66,17 +66,17 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "event": {
+    "events": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::event.event",
-      "inversedBy": "users_permissions_users"
+      "mappedBy": "users_permissions_user"
     },
-    "entry": {
+    "entries": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::entry.entry",
-      "inversedBy": "users_permissions_users"
+      "mappedBy": "users_permissions_user"
     }
   }
 }

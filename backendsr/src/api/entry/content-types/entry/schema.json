@@ -14,19 +14,11 @@
     "result": {
       "type": "string"
     },
-    "users_permissions_users": {
+    "users_permissions_user": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "mappedBy": "entry"
-    },
-    "event": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::event.event"
-    },
-    "seedate": {
-      "type": "datetime"
+      "inversedBy": "entries"
     }
   }
 }

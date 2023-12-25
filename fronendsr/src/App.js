@@ -1,6 +1,7 @@
-import logo from "./logo.svg";
-import "./App.css";
+// App.js
 import LoginForm from "./LoginForm";
+import StudentPage from "./StudentPage";
+
 function App() {
   return (
     <div>
