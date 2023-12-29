@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import StudentPage from "./StudentPage";
-
+import StaffPage from "./StaffPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -15,6 +15,11 @@ const router = createBrowserRouter([
   {
     path: "/student",
     element: <StudentPage />,
+  },
+  ,
+  {
+    path: "/staff",
+    element: <StaffPage />,
   },
 ]);
 

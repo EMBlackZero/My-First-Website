@@ -4,7 +4,8 @@
   "info": {
     "singularName": "event",
     "pluralName": "events",
-    "displayName": "Event"
+    "displayName": "Event",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -21,6 +22,12 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
+      "inversedBy": "events"
+    },
+    "entry": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::entry.entry",
       "inversedBy": "events"
     }
   }

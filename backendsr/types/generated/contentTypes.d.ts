@@ -368,6 +368,7 @@ export interface ApiEntryEntry extends Schema.CollectionType {
     singularName: 'entry';
     pluralName: 'entries';
     displayName: 'Entry';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -379,6 +380,12 @@ export interface ApiEntryEntry extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    events: Attribute.Relation<
+      'api::entry.entry',
+      'oneToMany',
+      'api::event.event'
+    >;
+    seedate: Attribute.DateTime;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -403,6 +410,7 @@ export interface ApiEventEvent extends Schema.CollectionType {
     singularName: 'event';
     pluralName: 'events';
     displayName: 'Event';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -414,6 +422,11 @@ export interface ApiEventEvent extends Schema.CollectionType {
       'api::event.event',
       'manyToOne',
       'plugin::users-permissions.user'
+    >;
+    entry: Attribute.Relation<
+      'api::event.event',
+      'manyToOne',
+      'api::entry.entry'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

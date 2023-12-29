@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("student_b");
+  const [username, setUsername] = useState("450");
   const [password, setPassword] = useState("123456");
   const [submitEnabled, setSubmitEnabled] = useState(true);
 
@@ -36,9 +36,11 @@ const LoginForm = () => {
       if (result.data.role) {
         if (result.data.role.name == "student") {
           navigate("/student");
+        } else if (result.data.role.name == "staff") {
+          navigate("/staff");
         }
+        console.log(result);
       }
-      console.log(result);
     } catch (e) {
       console.log(e);
       console.log("wrong username & password");
