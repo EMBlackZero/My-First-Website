@@ -1,5 +1,5 @@
 // SimpleLoginForm.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import axiosConfig from "./axios-interceptor";
@@ -24,7 +24,7 @@ const LoginForm = () => {
     setSubmitEnabled(false);
 
     try {
-      let result = await axios.post("http://localhost:1337/api/auth/local", {
+        let result = await axios.post("http://localhost:1337/api/auth/local", {
         identifier: username,
         password: password,
       });
@@ -34,9 +34,9 @@ const LoginForm = () => {
         "http://localhost:1337/api/users/me?populate=role"
       );
       if (result.data.role) {
-        if (result.data.role.name == "student") {
+        if (result.data.role.name === "student") {
           navigate("/student");
-        } else if (result.data.role.name == "staff") {
+        } else if (result.data.role.name === "staff") {
           navigate("/staff");
         }
         console.log(result);

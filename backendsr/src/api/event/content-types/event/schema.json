@@ -24,11 +24,11 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "events"
     },
-    "entry": {
+    "entries": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::entry.entry",
-      "inversedBy": "events"
+      "mappedBy": "event"
     }
   }
 }

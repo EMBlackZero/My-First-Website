@@ -380,9 +380,9 @@ export interface ApiEntryEntry extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
-    events: Attribute.Relation<
+    event: Attribute.Relation<
       'api::entry.entry',
-      'oneToMany',
+      'manyToOne',
       'api::event.event'
     >;
     seedate: Attribute.DateTime;
@@ -423,9 +423,9 @@ export interface ApiEventEvent extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
-    entry: Attribute.Relation<
+    entries: Attribute.Relation<
       'api::event.event',
-      'manyToOne',
+      'oneToMany',
       'api::entry.entry'
     >;
     createdAt: Attribute.DateTime;
