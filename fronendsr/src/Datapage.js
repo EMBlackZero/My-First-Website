@@ -1,24 +1,17 @@
-export default function Datapage(props) {
-  const generateRows = () => {
-    if (props.data != null) {
-      return props.data.map((datapage) => (
-        <tr key={datapage.id}>
-          <td>{datapage.attributes.name}</td>
-          <td>{datapage.attributes.datetime}</td>
-        </tr>
-      ));
-    } else {
-      return null;
-    }
-  };
-  return (
-    <table border="1">
-      <thead>
-        <tr>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>{generateRows()}</tbody>
-    </table>
-  );
+import { useEffect, useState } from "react";
+export default function Datapage(defaultValue, key) {
+  const [value, setValue] = useState(() => {
+    const localStorageValue = localStorage.getItem(key);
+    return localStorageValue !== null
+      ? JSON.parse(localStorageValue)
+      : defaultValue;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [key, value]);
+
+  return [value, setValue];
 }
+
+

@@ -4,7 +4,7 @@ const axiosConfig = {};
 
 axios.interceptors.request.use((request) => {
   if (axiosConfig.jwt) {
-    request.headers.set("Authorization", `Bearer ${axiosConfig.jwt}`);
+    axios.defaults.headers.common("Authorization", `Bearer ${axiosConfig.jwt}`);
   }
 
   return request;

@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import StudentPage from "./StudentPage";
 import StaffPage from "./StaffPage";
+import Datapage from "./Datapage";
 const router = createBrowserRouter([
   {
     path: "/",
