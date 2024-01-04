@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
-import axiosConfig from "./axios-interceptor";
 import { useNavigate } from "react-router-dom";
 import Datapage from "./Datapage";
 
