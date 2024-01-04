@@ -20,33 +20,40 @@ function StaffPage() {
   const [jwt, setjwt] = Datapage("", "jwt");
   const navigate = useNavigate();
 
-  const fetchData = async (withAuthorization) => {
-    try {
-      axios.defaults.headers.common = withAuthorization
-        ? { Authorization: `Bearer ${jwt}` }
-        : {};
-
-      const response = await axios.get("http://localhost:1337/api/events");
-      setEvents(response.data.data);
-    } catch (error) {
-      console.log(
-        withAuthorization
-          ? "Error fetching data with Authorization:"
-          : "Error fetching data:",
-        error
-      );
-    }
-  };
-
   useEffect(() => {
-    fetchData(false);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:1337/api/events");
+        console.log("API response:", response);
+        setEvents(response.data.data);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
+    const fetchDataWithAuthorization = async () => {
+      try {
+        axios.defaults.headers.common = {
+          Authorization: `Bearer ${jwt}`,
+        };
+        const response = await axios.get("http://localhost:1337/api/events");
+        console.log("API response with Authorization:", response);
+        setEvents(response.data.data);
+      } catch (error) {
+        console.log("Error fetching data with Authorization:", error);
+      }
+    };
+
     if (jwt) {
-      fetchData(true);
+      fetchDataWithAuthorization();
     }
   }, [jwt]);
+  console.log('data',events)
+
   const handleViewDetails = (sculptor) => {
     setSelectedSculptor(sculptor);
     setpass(false);

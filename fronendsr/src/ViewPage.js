@@ -2,41 +2,30 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Datapage from "./Datapage";
-import { Container, Card, Button } from "react-bootstrap";
-
-function ViewPage() {
-  const [selectedSculptor, setSelectedSculptor] = useState(null);
-  const [events, setEvents] = useState([]);
-  const [pass, setpass] = useState(true);
+import { Container, Card, Button,Table  } from "react-bootstrap";
+export default function ViewPage(props) {
+  const Viewid = props.data;
+  console.log('id',Viewid)
+  const [views, setViews] = useState([]);
   const [jwt, setjwt] = Datapage("", "jwt");
 
-  const fetchData = async (withAuthorization) => {
-    try {
-      axios.defaults.headers.common = withAuthorization
-        ? { Authorization: `Bearer ${jwt}` }
-        : {};
 
-      const response = await axios.get("http://localhost:1337/api/events");
-      setEvents(response.data.data);
-    } catch (error) {
-      console.log(
-        withAuthorization
-          ? "Error fetching data with Authorization:"
-          : "Error fetching data:",
-        error
-      );
-    }
-  };
-
-  useEffect(() => {
-    fetchData(false);
-  }, []);
-
-  useEffect(() => {
-    if (jwt) {
-      fetchData(true);
-    }
-  }, [jwt]);
+  return (
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>คะเเนน</th>
+          <th>PASS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{Viewid.attributes.users_permissions_user.data.attributes.username}</td>
+          <td>{Viewid.attributes.result}</td>
+          <td>{Viewid.attributes.users_permissions_user.data.attributes.username}</td>
+        </tr>
+      </tbody>
+    </Table>
+  );
 }
-
-export default ViewPage;
