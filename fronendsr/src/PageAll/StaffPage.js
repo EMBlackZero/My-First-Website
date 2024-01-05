@@ -52,7 +52,7 @@ function StaffPage() {
       fetchDataWithAuthorization();
     }
   }, [jwt]);
-  console.log('data',events)
+  console.log("data", events);
 
   const handleViewDetails = (sculptor) => {
     setSelectedSculptor(sculptor);
@@ -70,7 +70,11 @@ function StaffPage() {
   return (
     <Container style={containerStyle}>
       <h1>Staff Page</h1>
-      <Button variant="info" onClick={() => handleLogout()}>
+      <Button
+        variant="danger"
+        onClick={() => handleLogout()}
+        style={{ position: "absolute", top: "50px", left: "1240px" }}
+      >
         Logout
       </Button>
       {!pass && (

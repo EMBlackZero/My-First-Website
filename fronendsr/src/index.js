@@ -5,9 +5,9 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import StudentPage from "./StudentPage";
-import StaffPage from "./StaffPage";
-import Datapage from "./Datapage";
+import StudentPage from "./PageAll/StudentPage";
+import StaffPage from "./PageAll/StaffPage";
+import Datapage from "./PageAll/Datapage";
 const router = createBrowserRouter([
   {
     path: "/",

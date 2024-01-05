@@ -423,6 +423,7 @@ export interface ApiEventEvent extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
+    file: Attribute.Media;
     entries: Attribute.Relation<
       'api::event.event',
       'oneToMany',

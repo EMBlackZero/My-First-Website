@@ -73,14 +73,22 @@ function StudentPage() {
   return (
     <Container style={containerStyle}>
       <h1>Student Page</h1>
-      <Button variant="info" onClick={() => handleLogout()}>
+      <Button
+        variant="danger"
+        onClick={() => handleLogout()}
+        style={{ position: "absolute", top: "50px", left: "1240px" }}
+      >
         Logout
       </Button>
       {!pass && (
         <>
           <h1>{selectedSculptor.attributes.event.data.attributes.name}</h1>
           <ViewPage data={selectedSculptor} />
-          <Button variant="info" onClick={() => setpass(true)}>
+          <Button
+            variant="info"
+            onClick={() => setpass(true)}
+            style={{ position: "absolute", top: "350px", left: "1250px" }}
+          >
             Back
           </Button>
         </>

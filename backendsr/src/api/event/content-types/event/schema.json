@@ -24,6 +24,14 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "events"
     },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
     "entries": {
       "type": "relation",
       "relation": "oneToMany",
