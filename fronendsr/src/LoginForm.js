@@ -1,17 +1,13 @@
 // SimpleLoginForm.js
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Datapage from "./PageAll/Datapage";
-
+import { useNavigate,useParams  } from "react-router-dom";
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("450");
+  const [username, setUsername] = useState("350");
   const [password, setPassword] = useState("123456");
   const [submitEnabled, setSubmitEnabled] = useState(true);
-  const [jwt, setjwt] = Datapage("", "jwt");
-
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -19,30 +15,6 @@ const LoginForm = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      if (jwt !== "") {
-        try {
-          const result = await axios.get(
-            "http://localhost:1337/api/users/me?populate=role"
-          );
-          if (result.data.role) {
-            if (result.data.role.name === "student") {
-              navigate("/student");
-            } else if (result.data.role.name === "staff") {
-              navigate("/staff");
-            }
-            console.log(result);
-          }
-        } catch (error) {
-          console.log("Error fetching user data:", error);
-        }
-      }
-    };
-
-    fetchData();
-  }, [jwt]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitEnabled(false);
@@ -52,22 +24,43 @@ const LoginForm = () => {
         identifier: username,
         password: password,
       });
-      setjwt(result.data.jwt);
-      axios.defaults.headers.common = {
-        Authorization: `Bearer ${result.data.jwt}`,
+
+      //เก็บ jwt ในฟังก์ชั่นเพื่อเรียกใช้งานในหน้า component อื่น
+      const saveTokenToLocalStorage = (token) => {
+        localStorage.setItem("jwtToken", token); //เก็บ jwt token
+      };
+      saveTokenToLocalStorage(result.data.jwt);
+      
+      const saveNameToLocalStorage = (Namee) => {
+        localStorage.setItem("myname", Namee); //เก็บ jwt token
+      };
+      saveNameToLocalStorage(result.data.user.username);
+      console.log(result.data.user.username)
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
       };
 
-      result = await axios.get(
-        "http://localhost:1337/api/users/me?populate=role"
+      //เช็ค role
+      const userResult = await axios.get(
+        "http://localhost:1337/api/users/me?populate=role",
+        config
       );
-      if (result.data.role) {
-        if (result.data.role.name === "student") {
-          navigate("/student");
-        } else if (result.data.role.name === "staff") {
+
+      // Step 4: Check user's role and navigate accordingly
+      if (userResult.data.role) {
+        if (userResult.data.role.name === "student") {
+          console.log(userResult.data.role.name);
+          navigate("/datapage");
+        }
+        if (userResult.data.role.name === "staff") {
+          console.log(userResult.data.role.name);
           navigate("/staff");
         }
-        console.log(result);
       }
+
+      console.log(userResult);
     } catch (e) {
       console.log(e);
       console.log("wrong username & password");

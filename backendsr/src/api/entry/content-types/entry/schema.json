@@ -17,18 +17,17 @@
     },
     "users_permissions_user": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "entries"
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "seedate": {
+      "type": "datetime"
     },
     "event": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::event.event",
       "inversedBy": "entries"
-    },
-    "seedate": {
-      "type": "datetime"
     }
   }
 }

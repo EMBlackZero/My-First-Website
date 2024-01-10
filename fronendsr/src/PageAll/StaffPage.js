@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import Datapage from "./Datapage";
 import { Container, Card, Button } from "react-bootstrap";
 
 function StaffPage() {
@@ -17,54 +16,36 @@ function StaffPage() {
   const [selectedSculptor, setSelectedSculptor] = useState(null);
   const [events, setEvents] = useState([]);
   const [pass, setpass] = useState(true);
-  const [jwt, setjwt] = Datapage("", "jwt");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:1337/api/events");
-        console.log("API response:", response);
-        setEvents(response.data.data);
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
+    //เก็บข้อมูล jwt ที่ได้จากการ login
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
+      },
     };
 
-    fetchData();
+    //เรียกข้อมูล
+    axios
+      .get("http://localhost:1337/api/events", config)
+      .then(({ data }) => setEvents(data.data))
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
-
-  useEffect(() => {
-    const fetchDataWithAuthorization = async () => {
-      try {
-        axios.defaults.headers.common = {
-          Authorization: `Bearer ${jwt}`,
-        };
-        const response = await axios.get("http://localhost:1337/api/events");
-        console.log("API response with Authorization:", response);
-        setEvents(response.data.data);
-      } catch (error) {
-        console.log("Error fetching data with Authorization:", error);
-      }
-    };
-
-    if (jwt) {
-      fetchDataWithAuthorization();
-    }
-  }, [jwt]);
-  console.log("data", events);
-
   const handleViewDetails = (sculptor) => {
     setSelectedSculptor(sculptor);
     setpass(false);
   };
   const handleLogout = () => {
-    window.localStorage.removeItem("jwt");
-    axios.defaults.headers.common = {
-      Authorization: ``,
-    };
+    // Remove JWT Token from Local Storage
+    window.localStorage.removeItem("jwtToken");
+    // Clear Authorization Header in Axios Defaults
+    axios.defaults.headers.common.Authorization = "";
+    // Navigate to the "/" path (adjust this if using a different routing library)
     navigate("/");
-    setjwt("");
   };
 
   return (

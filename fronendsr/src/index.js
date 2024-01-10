@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import StudentPage from "./PageAll/StudentPage";
 import StaffPage from "./PageAll/StaffPage";
 import Datapage from "./PageAll/Datapage";
+import ViewPage from "./PageAll/ViewPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -17,10 +18,17 @@ const router = createBrowserRouter([
     path: "/student",
     element: <StudentPage />,
   },
-  ,
   {
     path: "/staff",
     element: <StaffPage />,
+  },
+  {
+    path: "/datapage",
+    element: <Datapage />,
+  },
+  {
+    path: "/viewPage",
+    element: <ViewPage />,
   },
 ]);
 
