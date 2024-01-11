@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     element: <Datapage />,
   },
   {
-    path: "/viewPage",
+    path: "/viewpage",
     element: <ViewPage />,
   },
 ]);

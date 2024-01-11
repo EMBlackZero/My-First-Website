@@ -380,6 +380,11 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
       'manyToMany',
       'api::event.event'
     >;
+    entries: Attribute.Relation<
+      'api::category.category',
+      'oneToMany',
+      'api::entry.entry'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -421,6 +426,12 @@ export interface ApiEntryEntry extends Schema.CollectionType {
       'api::entry.entry',
       'manyToOne',
       'api::event.event'
+    >;
+    comment: Attribute.String & Attribute.DefaultTo<'No comment'>;
+    category: Attribute.Relation<
+      'api::entry.entry',
+      'manyToOne',
+      'api::category.category'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;

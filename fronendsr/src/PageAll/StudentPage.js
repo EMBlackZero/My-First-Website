@@ -13,14 +13,11 @@ function StudentPage() {
     fontSize: "1.5em",
     fontWeight: "bold",
   };
-  const [selectedSculptor, setSelectedSculptor] = useState(null);
+  const [selectedSculptor, setSelectedSculptor] = useState([]);
   const [entrys, setEntrys] = useState([]);
   const [pass, setpass] = useState(true);
   const navigate = useNavigate();
-  
-  const savedataToLocalStorage = (dataa) => {
-    localStorage.setItem("isdata", dataa);
-  };
+  const userName = localStorage.getItem("myname");
 
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
@@ -32,79 +29,106 @@ function StudentPage() {
     };
     //เรียกข้อมูล
     axios
-      .get("http://localhost:1337/api/events?populate=*", config)
-      .then(({ data }) => setEntrys(data.data))
+      .get("http://localhost:1337/api/categories?populate=*", config)
+      .then(({ data }) => {
+        setEntrys(data.data);
+      })
       .catch((error) => {
         console.error("Error fetching data:", error);
         // Handle the error, e.g., set an error state
       });
-
   }, []);
-  
-  savedataToLocalStorage(entrys);
-  console.log("data1", entrys);
-
-  const handleViewDetails = (sculptor) => {
-    setSelectedSculptor(sculptor);
-    setpass(false);
-  };
+  console.log("data", entrys);
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
     window.localStorage.removeItem("jwtToken");
-
     // Clear Authorization Header in Axios Defaults
     axios.defaults.headers.common.Authorization = "";
-
     // Navigate to the "/" path (adjust this if using a different routing library)
     navigate("/");
   };
 
+  const handleViewDetails = (sculptor,subject) => {
+    setSelectedSculptor(sculptor);
+    localStorage.setItem("mysub", subject);
+    console.log(localStorage.getItem("myid"));
+    console.log(localStorage.getItem("mysub"));
+    setpass(false);
+  };
+
+  const handleid = (id, ) => {
+    console.log("ID:", id);
+
+    // Convert id to a number if needed
+
+    localStorage.setItem("myid", id);
+    navigate("/viewpage");
+
+    console.log(localStorage.getItem("myid"));
+    console.log(localStorage.getItem("mysub"));
+  };
+
   return (
-    <>
-      <Container style={containerStyle}>
-        <h1>Student Page</h1>
-        <Button
-          variant="danger"
-          onClick={() => handleLogout()}
-          style={{ position: "absolute", top: "50px", left: "1240px" }}
-        >
-          Logout
-        </Button>
+    <div style={containerStyle}>
+      <h1>คะแนนสอบของ นาย{userName}</h1>
+      <Button
+        variant="danger"
+        onClick={() => handleLogout()}
+        style={{ position: "absolute", top: "50px", left: "1240px" }}
+      >
+        Logout
+      </Button>
+      <ul>
+        {pass &&
+          entrys.map((entry) => (
+            <li key={entry.id}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>{entry.attributes.Subject}</Card.Title>
+                  <Button
+                    variant="info"
+                    onClick={() =>
+                      handleViewDetails(entry.attributes.events.data,entry.attributes.Subject)
+                    }
+                  >
+                    View
+                  </Button>
+                </Card.Body>
+              </Card>
+            </li>
+          ))}
         {!pass && (
           <>
-            <h1>{selectedSculptor.attributes.name}</h1>
-            <ViewPage data={selectedSculptor} />
-            <Button
-              variant="info"
-              onClick={() => setpass(true)}
-              style={{ position: "absolute", top: "350px", left: "1250px" }}
-            >
-              Back
-            </Button>
-          </>
-        )}
-
-        {pass && (
-          <ul>
-            {entrys.map((entry) => (
-              <li key={entry.id}>
+            {selectedSculptor.map((sb) => (
+              <li key={sb.id}>
                 <Card>
                   <Card.Body>
-                    <Card.Title>{entry.attributes.name}</Card.Title>
+                    <Card.Title>{sb.attributes.name}</Card.Title>
                     <Button
                       variant="info"
-                      onClick={() => handleViewDetails(entry)}
+                      onClick={() => handleid(sb.id, sb.attributes.Subject)}
                     >
                       View
+                    </Button>
+                    <Button
+                      variant="info"
+                      onClick={() => setpass(true)}
+                      style={{
+                        position: "absolute",
+                        top: "350px",
+                        left: "1250px",
+                      }}
+                    >
+                      go Back
                     </Button>
                   </Card.Body>
                 </Card>
               </li>
             ))}
-          </ul>
+          </>
         )}
-      </Container>
-    </>
+      </ul>
+    </div>
   );
 }
 

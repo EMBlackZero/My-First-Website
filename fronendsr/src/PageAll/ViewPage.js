@@ -7,9 +7,11 @@ const ViewPage = () => {
   const navigate = useNavigate();
   const userid = localStorage.getItem("myid");
   const userName = localStorage.getItem("myname");
+  const usersub = localStorage.getItem("mysub");
+
   const [datas, setDatas] = useState([]);
   const [selectedSculptor, setSelectedSculptor] = useState(null);
-  const url = `http://localhost:1337/api/entries?populate[event][filters][id][$eq]=${userid}&populate[users_permissions_user][filters][username][$eq]=${userName}`;
+  const url = `http://localhost:1337/api/entries?populate[event][filters][id][$eq]=${userid}&populate[users_permissions_user][filters][username][$eq]=${userName}&populate[category][filters][Subject][$eq]=${usersub}`;
 
   console.log(userName);
 
@@ -28,7 +30,8 @@ const ViewPage = () => {
         const filteredData = data.data.filter(
           (item) =>
             item.attributes.event.data !== null &&
-            item.attributes.users_permissions_user.data !== null
+            item.attributes.users_permissions_user.data !== null &&
+            item.attributes.category.data !== null
         );
         setDatas(filteredData);
       })
@@ -37,7 +40,7 @@ const ViewPage = () => {
         // Handle the error, e.g., set an error state
       });
   }, []);
-  console.log(datas);
+  console.log('viwedata',datas);
 
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
@@ -56,7 +59,7 @@ const ViewPage = () => {
           <tr>
             <th>Name</th>
             <th>คะแนน</th>
-            <th>PASS</th>
+            <th>Comment</th>
           </tr>
         </thead>
         <tbody>
@@ -69,10 +72,21 @@ const ViewPage = () => {
                 }
               </td>
               <td>{data.attributes.result}</td>
-              <td>{data.attributes.result >= 50 ? "PASS" : "FAIL"}</td>
+              <td>{data.attributes.comment}</td>
             </tr>
           ))}
         </tbody>
+        <Button
+          variant="info"
+          onClick={() => navigate("/student")}
+          style={{
+            position: "absolute",
+            top: "350px",
+            left: "1250px",
+          }}
+        >
+          Back
+        </Button>
       </Table>
     </>
   );

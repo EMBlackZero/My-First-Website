@@ -52,7 +52,7 @@ const LoginForm = () => {
       if (userResult.data.role) {
         if (userResult.data.role.name === "student") {
           console.log(userResult.data.role.name);
-          navigate("/datapage");
+          navigate("/student");
         }
         if (userResult.data.role.name === "staff") {
           console.log(userResult.data.role.name);

@@ -20,6 +20,12 @@
       "relation": "manyToMany",
       "target": "api::event.event",
       "inversedBy": "categories"
+    },
+    "entries": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::entry.entry",
+      "mappedBy": "category"
     }
   }
 }
