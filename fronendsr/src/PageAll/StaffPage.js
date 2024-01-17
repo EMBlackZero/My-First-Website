@@ -17,7 +17,7 @@ function StaffPage() {
   const [events, setEvents] = useState([]);
   const [pass, setpass] = useState(true);
   const navigate = useNavigate();
-
+  const userName = localStorage.getItem("myname");
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
@@ -29,16 +29,20 @@ function StaffPage() {
 
     //เรียกข้อมูล
     axios
-      .get("http://localhost:1337/api/events", config)
-      .then(({ data }) => setEvents(data.data))
+      .get(
+        `http://localhost:1337/api/users?filters[username][$ne]=${userName}`,
+        config
+      )
+      .then(({ data }) => setEvents(data))
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
   }, []);
-  const handleViewDetails = (sculptor) => {
-    setSelectedSculptor(sculptor);
-    setpass(false);
+  const handleViewDetails = (stname) => {
+    localStorage.setItem("mystname", stname);
+    navigate("/datapage");
   };
+  console.log('data',events);
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
     window.localStorage.removeItem("jwtToken");
@@ -49,47 +53,34 @@ function StaffPage() {
   };
 
   return (
-    <Container style={containerStyle}>
-      <h1>Staff Page</h1>
+    <div style={containerStyle}>
+      <h1 style={{ textAlign: "center" }}>Admin</h1>
       <Button
         variant="danger"
         onClick={() => handleLogout()}
-        style={{ position: "absolute", top: "50px", left: "1240px" }}
+        style={{ position: "absolute", top: "40px", left: "1340px" }}
       >
         Logout
       </Button>
-      {!pass && (
-        <Card>
-          <Card.Body
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Card.Title>{selectedSculptor.attributes.name}</Card.Title>
-            <Button variant="primary" onClick={() => setpass(true)}>
-              Back
-            </Button>
-          </Card.Body>
-        </Card>
-      )}
-      {pass && (
-        <ul>
-          {events.map((event) => (
-            <li key={event.id}>
-              <Card>
-                <Card.Body>
-                  <Card.Title>{event.attributes.name}</Card.Title>
-                  <Button
-                    variant="info"
-                    onClick={() => handleViewDetails(event)}
-                  >
-                    View
-                  </Button>
-                </Card.Body>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      )}
-    </Container>
+      <ul className="list-unstyled">
+        <h2 style={{ textAlign: "left" }}>รายชื่อนักศึกษา</h2>
+        {/* Use Bootstrap utility class for removing list styling */}
+        {events.map((entry) => (
+          <li key={entry.id}>
+            <Card className="my-3">
+              {" "}
+              {/* Add margin to the Card */}
+              <Card.Body>
+                <Card.Title className="mb-">{entry.username}</Card.Title>
+                <Button variant="info" onClick={() => handleViewDetails(entry.username)}>
+                  View
+                </Button>
+              </Card.Body>
+            </Card>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

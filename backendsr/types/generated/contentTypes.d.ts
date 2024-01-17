@@ -433,6 +433,7 @@ export interface ApiEntryEntry extends Schema.CollectionType {
       'manyToOne',
       'api::category.category'
     >;
+    summit: Attribute.Boolean;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

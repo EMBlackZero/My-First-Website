@@ -18,15 +18,15 @@ function StudentPage() {
   const [pass, setpass] = useState(true);
   const navigate = useNavigate();
   const userName = localStorage.getItem("myname");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
+    },
+  };
 
   useEffect(() => {
     //เก็บข้อมูล jwt ที่ได้จากการ login
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-        // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
-      },
-    };
     //เรียกข้อมูล
     axios
       .get("http://localhost:1337/api/categories?populate=*", config)
@@ -38,6 +38,7 @@ function StudentPage() {
         // Handle the error, e.g., set an error state
       });
   }, []);
+
   console.log("data", entrys);
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
@@ -58,12 +59,9 @@ function StudentPage() {
 
   const handleid = (id, ) => {
     console.log("ID:", id);
-
-    // Convert id to a number if needed
-
-    localStorage.setItem("myid", id);
+    localStorage.setItem("myid", id);//setid
     navigate("/viewpage");
-
+    axios.get(`http://localhost:1337/api/entries/${id}/seedate`, config)
     console.log(localStorage.getItem("myid"));
     console.log(localStorage.getItem("mysub"));
   };

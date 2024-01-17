@@ -1,3 +1,4 @@
+//student
 import React, { useEffect, useState } from "react";
 import { Card, Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -8,21 +9,19 @@ const ViewPage = () => {
   const userid = localStorage.getItem("myid");
   const userName = localStorage.getItem("myname");
   const usersub = localStorage.getItem("mysub");
-
   const [datas, setDatas] = useState([]);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
+    },
+  };
   const [selectedSculptor, setSelectedSculptor] = useState(null);
   const url = `http://localhost:1337/api/entries?populate[event][filters][id][$eq]=${userid}&populate[users_permissions_user][filters][username][$eq]=${userName}&populate[category][filters][Subject][$eq]=${usersub}`;
 
   console.log(userName);
 
   useEffect(() => {
-    //เก็บข้อมูล jwt ที่ได้จากการ login
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-        // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
-      },
-    };
     //เรียกข้อมูล
     axios
       .get(url, config)
@@ -40,7 +39,7 @@ const ViewPage = () => {
         // Handle the error, e.g., set an error state
       });
   }, []);
-  console.log('viwedata',datas);
+  console.log("viwedata", datas);
 
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
@@ -49,6 +48,11 @@ const ViewPage = () => {
     axios.defaults.headers.common.Authorization = "";
     // Navigate to the "/" path (adjust this if using a different routing library)
     navigate("/");
+  };
+  const Summitbutthon = (data) => {
+
+    axios.get(`http://localhost:1337/api/entries/${data}/summit`, config) 
+    window.location.reload();
   };
 
   return (
@@ -60,6 +64,7 @@ const ViewPage = () => {
             <th>Name</th>
             <th>คะแนน</th>
             <th>Comment</th>
+            <th>รับทราบคะแนน</th>
           </tr>
         </thead>
         <tbody>
@@ -73,6 +78,15 @@ const ViewPage = () => {
               </td>
               <td>{data.attributes.result}</td>
               <td>{data.attributes.comment}</td>
+              <td>
+                <Button
+                  onClick={() => Summitbutthon(data.id)}
+                  variant={data.attributes.summit ? "success" : "danger"}
+                  className="mt-2" // Add additional Bootstrap classes for spacing if needed
+                >
+                  <span style={{ fontWeight: "bold" }}>Summit Point</span>
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
