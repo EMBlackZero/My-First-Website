@@ -9,6 +9,7 @@ import StudentPage from "./PageAll/StudentPage";
 import StaffPage from "./PageAll/StaffPage";
 import Datapage from "./PageAll/Datapage";
 import ViewPage from "./PageAll/ViewPage";
+import AddPage from "./PageAll/AddPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/viewpage",
     element: <ViewPage />,
+  },
+  {
+    path: "/addpage",
+    element: <AddPage />,
   },
 ]);
 

@@ -13,9 +13,7 @@ function StaffPage() {
     fontSize: "1.5em",
     fontWeight: "bold",
   };
-  const [selectedSculptor, setSelectedSculptor] = useState(null);
   const [events, setEvents] = useState([]);
-  const [pass, setpass] = useState(true);
   const navigate = useNavigate();
   const userName = localStorage.getItem("myname");
   useEffect(() => {
@@ -38,11 +36,14 @@ function StaffPage() {
         console.error("Error fetching data:", error);
       });
   }, []);
+
   const handleViewDetails = (stname) => {
     localStorage.setItem("mystname", stname);
     navigate("/datapage");
   };
-  console.log('data',events);
+  console.log("data", events);
+  localStorage.setItem("myadd", JSON.stringify(events));
+
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
     window.localStorage.removeItem("jwtToken");
@@ -51,6 +52,9 @@ function StaffPage() {
     // Navigate to the "/" path (adjust this if using a different routing library)
     navigate("/");
   };
+  const handleAdd = () => {
+    navigate("/addpage")
+  }
 
   return (
     <div style={containerStyle}>
@@ -63,7 +67,15 @@ function StaffPage() {
         Logout
       </Button>
       <ul className="list-unstyled">
-        <h2 style={{ textAlign: "left" }}>รายชื่อนักศึกษา</h2>
+        <h2 style={{ textAlign: "left" }}>
+          รายชื่อนักศึกษา
+          <Button
+            variant="danger"
+            onClick={() => handleAdd()}
+          >
+            Add
+          </Button>
+        </h2>
         {/* Use Bootstrap utility class for removing list styling */}
         {events.map((entry) => (
           <li key={entry.id}>
@@ -71,8 +83,13 @@ function StaffPage() {
               {" "}
               {/* Add margin to the Card */}
               <Card.Body>
-                <Card.Title className="mb-">{entry.username}</Card.Title>
-                <Button variant="info" onClick={() => handleViewDetails(entry.username)}>
+                <Card.Title className="mb-">
+                  {entry.Nickname ?? "ไม่ได้ใส่ชื่อ"} {entry.username}
+                </Card.Title>
+                <Button
+                  variant="info"
+                  onClick={() => handleViewDetails(entry.username)}
+                >
                   View
                 </Button>
               </Card.Body>

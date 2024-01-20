@@ -13,9 +13,7 @@ function Datapage() {
     fontSize: "1.5em",
     fontWeight: "bold",
   };
-  const [selectedSculptor, setSelectedSculptor] = useState(null);
   const [events, setEvents] = useState([]);
-  const [pass, setpass] = useState(true);
   const navigate = useNavigate();
   const userName = localStorage.getItem("mystname");
   const config = {
@@ -44,10 +42,7 @@ function Datapage() {
         console.error("Error fetching data:", error);
       });
   }, []);
-  const handleViewDetails = (sculptor) => {
-    setSelectedSculptor(sculptor);
-    setpass(false);
-  };
+
   console.log(events);
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
@@ -58,13 +53,18 @@ function Datapage() {
     navigate("/");
   };
 
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:1337/api/entries/${id}`, config);
+    window.location.reload();
+  };
+
   return (
     <>
-      <h1>คะแนน</h1>
+      <h1 style={{ display: "flex", justifyContent: "center" }}>คะแนน</h1>
       <Table striped bordered hover className="mt-4">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>ID</th>
             <th>วิชา</th>
             <th>คะแนน</th>
             <th>ประเภท</th>
@@ -84,8 +84,22 @@ function Datapage() {
               <td>{data.attributes.category.data.attributes.Subject}</td>
               <td>{data.attributes.result}</td>
               <td>{data.attributes.event.data.attributes.name}</td>
-              <td>{data.attributes.seedate ?? "Not View"}</td>
-              <td>{data.attributes.summit ? "Submit" : "Not Submit"}</td>
+              <td>
+                {new Date(data.attributes.seedate).toLocaleString("en-GB") ??
+                  "Not View"}
+              </td>
+              <td
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {data.attributes.summit ? "Submit" : "Not Submit"}
+                <Button variant="danger" onClick={() => handleDelete(data.id)}>
+                  <span style={{ fontWeight: "bold" }}>Delete</span>
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -94,8 +108,8 @@ function Datapage() {
           onClick={() => navigate("/staff")}
           style={{
             position: "absolute",
-            top: "350px",
-            left: "1250px",
+            top: "20px",
+            left: "12px",
           }}
         >
           Back

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
-import { useNavigate,useParams  } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const LoginForm = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("450");
@@ -30,12 +30,12 @@ const LoginForm = () => {
         localStorage.setItem("jwtToken", token); //เก็บ jwt token
       };
       saveTokenToLocalStorage(result.data.jwt);
-      
+
       const saveNameToLocalStorage = (Namee) => {
         localStorage.setItem("myname", Namee); //เก็บ jwt token
       };
       saveNameToLocalStorage(result.data.user.username);
-      console.log(result.data.user.username)
+      console.log(result.data.user.username);
       const config = {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -69,33 +69,51 @@ const LoginForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="formBasicUsername">
-        <Form.Label>Username</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter username"
-          value={username}
-          onChange={handleUsernameChange}
-          required
-        />
-      </Form.Group>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formBasicUsername">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter username"
+            value={username}
+            onChange={handleUsernameChange}
+            required
+          />
+        </Form.Group>
 
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={handlePasswordChange}
-          required
-        />
-      </Form.Group>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={handlePasswordChange}
+            required
+          />
+        </Form.Group>
 
-      <Button variant="primary" type="submit" disabled={!submitEnabled}>
-        Submit
-      </Button>
-    </Form>
+        <Button
+          style={{
+            display: "block",
+            margin: "auto", // This will center the button horizontally
+            marginTop: "20px", // Adjust the top margin as needed
+          }}
+          variant="primary"
+          type="submit"
+          disabled={!submitEnabled}
+        >
+          Submit
+        </Button>
+      </Form>
+    </div>
   );
 };
 
