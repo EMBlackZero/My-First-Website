@@ -10,6 +10,8 @@ import StaffPage from "./PageAll/StaffPage";
 import Datapage from "./PageAll/Datapage";
 import ViewPage from "./PageAll/ViewPage";
 import AddPage from "./PageAll/AddPage";
+import UploadX from "./PageAll/UploadX";
+import Addevent from "./PageAll/Addevent"
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
   {
     path: "/addpage",
     element: <AddPage />,
+  },
+  {
+    path: "/uploadx",
+    element: <UploadX />,
+  },
+  {
+    path: "/addevent",
+    element: <Addevent />,
   },
 ]);
 

@@ -18,6 +18,7 @@ function StudentPage() {
   const [pass, setpass] = useState(true);
   const navigate = useNavigate();
   const userName = localStorage.getItem("myname");
+  const Nickname = localStorage.getItem("mynickname");
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -68,7 +69,7 @@ function StudentPage() {
 
   return (
     <div style={containerStyle}>
-      <h1>คะแนนสอบของ นาย{userName}</h1>
+      <h1 style={{ textAlign: "center" }}>{Nickname}</h1>
       <Button
         variant="danger"
         onClick={() => handleLogout()}

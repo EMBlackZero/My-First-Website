@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("450");
+  const [username, setUsername] = useState("Admin");
   const [password, setPassword] = useState("123456");
   const [submitEnabled, setSubmitEnabled] = useState(true);
   const handleUsernameChange = (e) => {
@@ -32,10 +32,11 @@ const LoginForm = () => {
       saveTokenToLocalStorage(result.data.jwt);
 
       const saveNameToLocalStorage = (Namee) => {
-        localStorage.setItem("myname", Namee); //เก็บ jwt token
+        localStorage.setItem("myname", Namee.username); 
+        localStorage.setItem("mynickname", Namee.Nickname);
       };
-      saveNameToLocalStorage(result.data.user.username);
-      console.log(result.data.user.username);
+      saveNameToLocalStorage(result.data.user);
+      console.log(result.data.user);
       const config = {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,

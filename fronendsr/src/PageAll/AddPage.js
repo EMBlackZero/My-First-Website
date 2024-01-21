@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ToggleButton from "react-bootstrap/ToggleButton";
+import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 
 const CreateEntryForm = () => {
   const userName = localStorage.getItem("myname");
   const navigate = useNavigate();
-
   const [events, setEvents] = useState([]);
   const [categories, setCategories] = useState([]);
   const [events2, setEvents2] = useState([]);
@@ -76,6 +77,7 @@ const CreateEntryForm = () => {
     const formData = {
       result: result,
       comment: comment,
+      seedate:'',
       users_permissions_user: parseInt(userId),
       event: parseInt(eventId),
       category: parseInt(categoryId),
@@ -182,7 +184,6 @@ const CreateEntryForm = () => {
             onChange={handleCommentChange}
           />
         </Form.Group>
-
         <Button variant="primary" type="submit">
           Submit
         </Button>

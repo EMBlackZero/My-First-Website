@@ -466,7 +466,6 @@ export interface ApiEventEvent extends Schema.CollectionType {
   attributes: {
     name: Attribute.String;
     datetime: Attribute.DateTime;
-    file: Attribute.Media;
     entries: Attribute.Relation<
       'api::event.event',
       'oneToMany',

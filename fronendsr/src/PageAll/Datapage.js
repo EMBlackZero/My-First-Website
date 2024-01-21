@@ -85,7 +85,7 @@ function Datapage() {
               <td>{data.attributes.result}</td>
               <td>{data.attributes.event.data.attributes.name}</td>
               <td>
-                {new Date(data.attributes.seedate).toLocaleString("en-GB") ??
+                {data.attributes.seedate ?new Date(data.attributes.seedate).toLocaleString("en-GB"):
                   "Not View"}
               </td>
               <td

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { Container, Card, Button } from "react-bootstrap";
+import { Container, Card, Button, Form } from "react-bootstrap";
 
 function StaffPage() {
   const containerStyle = {
@@ -16,16 +16,14 @@ function StaffPage() {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const userName = localStorage.getItem("myname");
+
   useEffect(() => {
-    //เก็บข้อมูล jwt ที่ได้จากการ login
     const config = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-        // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
       },
     };
 
-    //เรียกข้อมูล
     axios
       .get(
         `http://localhost:1337/api/users?filters[username][$ne]=${userName}`,
@@ -41,27 +39,48 @@ function StaffPage() {
     localStorage.setItem("mystname", stname);
     navigate("/datapage");
   };
-  console.log("data", events);
-  localStorage.setItem("myadd", JSON.stringify(events));
 
   const handleLogout = () => {
-    // Remove JWT Token from Local Storage
     window.localStorage.removeItem("jwtToken");
-    // Clear Authorization Header in Axios Defaults
     axios.defaults.headers.common.Authorization = "";
-    // Navigate to the "/" path (adjust this if using a different routing library)
     navigate("/");
   };
-  const handleAdd = () => {
-    navigate("/addpage")
-  }
+
+  const handleSelectChange = (event) => {
+    const selectedValue = event.target.value;
+
+    // Handle the selected value based on your requirements
+    switch (selectedValue) {
+      case "addPerson":
+        navigate("/addpage");
+        break;
+      case "uploadFile":
+        navigate("/uploadx");
+        break;
+      case "addEvent":
+        navigate("/addevent");
+        break;
+      default:
+        // Handle default case if needed
+        break;
+    }
+  };
 
   return (
     <div style={containerStyle}>
       <h1 style={{ textAlign: "center" }}>Admin</h1>
+      <Form.Select
+        aria-label="Default select example"
+        onChange={handleSelectChange}
+      >
+        <option>ฟังชั่นเพิ่มเติม</option>
+        <option value="addPerson">Add 1 Person</option>
+        <option value="uploadFile">Upload File</option>
+        <option value="addEvent">Add Event</option>
+      </Form.Select>
       <Button
         variant="danger"
-        onClick={() => handleLogout()}
+        onClick={handleLogout}
         style={{ position: "absolute", top: "40px", left: "1340px" }}
       >
         Logout
@@ -69,19 +88,10 @@ function StaffPage() {
       <ul className="list-unstyled">
         <h2 style={{ textAlign: "left" }}>
           รายชื่อนักศึกษา
-          <Button
-            variant="danger"
-            onClick={() => handleAdd()}
-          >
-            Add
-          </Button>
         </h2>
-        {/* Use Bootstrap utility class for removing list styling */}
         {events.map((entry) => (
           <li key={entry.id}>
             <Card className="my-3">
-              {" "}
-              {/* Add margin to the Card */}
               <Card.Body>
                 <Card.Title className="mb-">
                   {entry.Nickname ?? "ไม่ได้ใส่ชื่อ"} {entry.username}
