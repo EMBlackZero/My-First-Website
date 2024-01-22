@@ -50,7 +50,7 @@ function StudentPage() {
     navigate("/");
   };
 
-  const handleViewDetails = (sculptor,subject) => {
+  const handleViewDetails = (sculptor, subject) => {
     setSelectedSculptor(sculptor);
     localStorage.setItem("mysub", subject);
     console.log(localStorage.getItem("myid"));
@@ -58,11 +58,11 @@ function StudentPage() {
     setpass(false);
   };
 
-  const handleid = (id, ) => {
+  const handleid = (id) => {
     console.log("ID:", id);
-    localStorage.setItem("myid", id);//setid
+    localStorage.setItem("myid", id); //setid
     navigate("/viewpage");
-    axios.get(`http://localhost:1337/api/entries/${id}/seedate`, config)
+    axios.get(`http://localhost:1337/api/entries/${id}/seedate`, config);
     console.log(localStorage.getItem("myid"));
     console.log(localStorage.getItem("mysub"));
   };
@@ -70,6 +70,7 @@ function StudentPage() {
   return (
     <div style={containerStyle}>
       <h1 style={{ textAlign: "center" }}>{Nickname}</h1>
+       <h2>รายวิชา</h2>
       <Button
         variant="danger"
         onClick={() => handleLogout()}
@@ -87,7 +88,10 @@ function StudentPage() {
                   <Button
                     variant="info"
                     onClick={() =>
-                      handleViewDetails(entry.attributes.events.data,entry.attributes.Subject)
+                      handleViewDetails(
+                        entry.attributes.events.data,
+                        entry.attributes.Subject
+                      )
                     }
                   >
                     View
