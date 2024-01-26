@@ -23,24 +23,24 @@
     "seedate": {
       "type": "datetime"
     },
+    "comment": {
+      "type": "string",
+      "default": "No comment"
+    },
+    "summit": {
+      "type": "boolean"
+    },
     "event": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::event.event",
       "inversedBy": "entries"
     },
-    "comment": {
-      "type": "string",
-      "default": "No comment"
-    },
     "category": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::category.category",
       "inversedBy": "entries"
-    },
-    "summit": {
-      "type": "boolean"
     }
   }
 }

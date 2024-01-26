@@ -26,6 +26,7 @@ const ViewPage = () => {
     axios
       .get(url, config)
       .then(({ data }) => {
+        console.log("viwed", data);
         const filteredData = data.data.filter(
           (item) =>
             item.attributes.event.data !== null &&
@@ -50,8 +51,7 @@ const ViewPage = () => {
     navigate("/");
   };
   const Summitbutthon = (data) => {
-
-    axios.get(`http://localhost:1337/api/entries/${data}/summit`, config) 
+    axios.get(`http://localhost:1337/api/entries/${data}/summit`, config);
     window.location.reload();
   };
 

@@ -16,23 +16,34 @@ const UploadFile = () => {
   const [categoryId, setCategoryId] = useState();
   const userName = localStorage.getItem("myname");
   const navigate = useNavigate();
-
-  const handleCategoryIdChange = (e) => {
-    setCategoryId(e.target.value);
-  };
-
-  const handleEventIdChange = (e) => {
-    setEventId(e.target.value);
-  };
-
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
     },
   };
+  const handleCategoryIdChange = async (e) => {
+    const id = e.target.value;
+    try {
+      const response3 = await axios.get(
+        `http://localhost:1337/api/categories/${id}?populate=*`,
+        config
+      );
+      setEvents2(response3.data.data.attributes.events.data);
+      console.log("dfgdfg", response3.data.data);
+      setCategoryId(e.target.value);
+    } catch (error) {
+      console.error("Error fetching events data:", error);
+      // Handle the error, e.g., set an error state
+    }
+  };
+
+  const handleEventIdChange = (e) => {
+
+    setLoading(true);
+    setEventId(e.target.value);
+  };
 
   const handleFileChange = async (event) => {
-    setLoading(true);
 
     try {
       const selectedFile = event.target.files[0];
@@ -66,15 +77,13 @@ const UploadFile = () => {
       setLoading(true);
 
       try {
-        const [response1, response2, response3] = await Promise.all([
+        const [response1, response2] = await Promise.all([
           axios.get("http://localhost:1337/api/users", config),
           axios.get("http://localhost:1337/api/categories", config),
-          axios.get("http://localhost:1337/api/events", config),
         ]);
 
         setEvents(response1.data);
         setCategories(response2.data.data);
-        setEvents2(response3.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -148,13 +157,14 @@ const UploadFile = () => {
 
   return (
     <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    animation: "moveUp 2s forwards", // Add animation property
+    border: "2px solid black", // Add border for rectangular frame
+  }}
+>
       {loading && <Spinner animation="border" role="status" />}
       <input type="file" onChange={handleFileChange} />
       <Form.Group controlId="categoryId">
@@ -190,12 +200,14 @@ const UploadFile = () => {
           ))}
         </Form.Select>
       </Form.Group>
-      <button onClick={postToStrapi} disabled={!excelData || loading}>
+      <Button
+        variant="info"
+        onClick={postToStrapi}
+        disabled={!excelData || loading}
+      >
         Post to Strapi
-      </button>
-      <Button variant="info" onClick={() => navigate("/staff")}>
-        Back
       </Button>
+      
     </div>
   );
 };

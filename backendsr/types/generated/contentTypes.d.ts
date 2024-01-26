@@ -422,18 +422,18 @@ export interface ApiEntryEntry extends Schema.CollectionType {
       'plugin::users-permissions.user'
     >;
     seedate: Attribute.DateTime;
+    comment: Attribute.String & Attribute.DefaultTo<'No comment'>;
+    summit: Attribute.Boolean;
     event: Attribute.Relation<
       'api::entry.entry',
       'manyToOne',
       'api::event.event'
     >;
-    comment: Attribute.String & Attribute.DefaultTo<'No comment'>;
     category: Attribute.Relation<
       'api::entry.entry',
       'manyToOne',
       'api::category.category'
     >;
-    summit: Attribute.Boolean;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

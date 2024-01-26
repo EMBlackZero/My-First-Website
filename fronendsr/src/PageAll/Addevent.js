@@ -1,15 +1,34 @@
-import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
 
-const CreateEntryForm = () => {
-  const navigate = useNavigate();
+const YourComponent = () => {
   const [result, setResult] = useState("");
   const [eventDateTime, setEventDateTime] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+    },
+  };
 
-  const handleResultChange = (e) => {
-    setResult(e.target.value);
+  useEffect(() => {
+    // Fetch categories when the component mounts
+    axios
+      .get("http://localhost:1337/api/categories", config)
+      .then(({ data }) => {
+        setCategories(data.data); // Assuming the actual category data is nested under data.data.data
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
+  console.log(categories);
+
+  const handleCategoryIdChange = (e) => {
+    setCategoryId(e.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -18,9 +37,8 @@ const CreateEntryForm = () => {
     const formData = {
       name: result,
       datetime: eventDateTime,
+      category: parseInt(categoryId),
     };
-
-    console.log(formData);
 
     try {
       const response = await axios.post(
@@ -41,45 +59,53 @@ const CreateEntryForm = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
+    <Container>
+      <h1>เพิ่มอีเว้น</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="result">
-          <Form.Label>NameEvent</Form.Label>
-          <Form.Control
-            type="text"
-            name="result"
-            placeholder="ชื่อกิจกรรม"
-            value={result}
-            onChange={handleResultChange}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>เวลาประกาศ</Form.Label>
-          <Form.Control
-            type="datetime-local"
-            placeholder="เพิ่มอีเว้น"
-            value={eventDateTime}
-            onChange={(e) => setEventDateTime(e.target.value)}
-            style={{ width: "200px" }}
-          />
-        </Form.Group>
-
+        <Row className="mb-3">
+          <Form.Group as={Col}>
+            <Form.Label>Result:</Form.Label>
+            <Form.Control
+              type="text"
+              value={result}
+              onChange={(e) => setResult(e.target.value)}
+            />
+          </Form.Group>
+        </Row>
+        <Row className="mb-3">
+          <Form.Group as={Col}>
+            <Form.Label>Event Date Time:</Form.Label>
+            <Form.Control
+              type="datetime-local"
+              value={eventDateTime}
+              onChange={(e) => setEventDateTime(e.target.value)}
+            />
+          </Form.Group>
+        </Row>
+        <Row className="mb-3">
+          <Form.Group controlId="categoryId">
+            <Form.Label>เลือกวิชา</Form.Label>
+            <Form.Select
+              aria-label="Default select example"
+              name="categoryId"
+              value={categoryId}
+              onChange={handleCategoryIdChange}
+            >
+              <option>เลือกวิชา</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.attributes.Subject}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        </Row>
         <Button variant="primary" type="submit">
           Submit
         </Button>
-        <Button variant="info" onClick={() => navigate("/staff")}>
-          Back
-        </Button>
       </Form>
-    </div>
+    </Container>
   );
 };
 
-export default CreateEntryForm;
+export default YourComponent;

@@ -1,197 +1,117 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button } from "react-bootstrap";
-import axios from "axios";
+import { Form, Button, Tab, Tabs, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import ToggleButton from "react-bootstrap/ToggleButton";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import axios from "axios";
+import UploadX from "./UploadX";
+import Addevent from "./Addevent";
+import Editpage from "./Editpage"
 
 const CreateEntryForm = () => {
-  const userName = localStorage.getItem("myname");
+  const [activeTab, setActiveTab] = useState("home");
   const navigate = useNavigate();
-  const [events, setEvents] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [events2, setEvents2] = useState([]);
-  const [result, setResult] = useState("");
-  const [userId, setUserId] = useState();
-  const [categoryId, setCategoryId] = useState();
-  const [eventId, setEventId] = useState(); // Added state for eventId
-  const [comment, setComment] = useState("");
+  const [data, setData] = useState([]);
+  const [id1, setid1] = useState([]);
+  const [id2, setid2] = useState([]);
+
+  const [showeditd, setshowedit] = useState(true);
+
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+  };
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+    },
+  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:1337/api/events?populate=*", config)
+      .then(({ data }) => setData(data.data))
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+  const handleDelete = async (id) => {
+    const response = await axios.get(
+      `http://localhost:1337/api/events/${id}?populate=*`,
+      config
+    );
+    // .then(({ data }) => setid(data.data.attributes.entries.data));
+    setid1(response.data.data.attributes.entries.data.map((d) => d.id));
+  };
+  const handleEdit = (id) => {
+  setid2(id)
+  setshowedit(false)
+    // axios.put(`http://localhost:1337/api/events/${id}`, config);
+    //window.location.reload();
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-        },
-      };
-
-      try {
-        const response1 = await axios.get(
-          `http://localhost:1337/api/users?filters[username][$ne]=${userName}`,
-          config
-        );
-        setEvents(response1.data);
-
-        const response2 = await axios.get(
-          "http://localhost:1337/api/categories",
-          config
-        );
-        setCategories(response2.data.data);
-
-        const response3 = await axios.get(
-          "http://localhost:1337/api/events",
-          config
-        );
-        setEvents2(response3.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [userName]);
-
-  const handleResultChange = (e) => {
-    setResult(e.target.value);
-  };
-
-  const handleUserIdChange = (e) => {
-    setUserId(e.target.value);
-  };
-
-  const handleCategoryIdChange = (e) => {
-    setCategoryId(e.target.value);
-  };
-
-  const handleEventIdChange = (e) => {
-    setEventId(e.target.value);
-  };
-
-  const handleCommentChange = (e) => {
-    setComment(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = {
-      result: result,
-      comment: comment,
-      seedate:'',
-      users_permissions_user: parseInt(userId),
-      event: parseInt(eventId),
-      category: parseInt(categoryId),
-    };
-
-    console.log(formData);
-
-    try {
-      const response = await axios.post(
-        "http://localhost:1337/api/entries",
-        { data: formData },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-          },
-        }
-      );
-      window.location.reload();
-      console.log("Response from server:", response.data);
-    } catch (error) {
-      console.error("Error creating entry:", error);
-      // เพิ่มตรวจสอบและการจัดการข้อผิดพลาดที่นี่ (เช่น แสดงข้อความข้อผิดพลาดให้ผู้ใช้เห็น)
-    }
-  };
+    console.log(id1);
+  }, [id1]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="result">
-          <Form.Label>คะแนน</Form.Label>
-          <Form.Control
-            type="text"
-            name="result"
-            placeholder="กรอกคะแนน"
-            value={result}
-            onChange={handleResultChange}
-          />
-        </Form.Group>
+    <>
+      <Button variant="info" onClick={() => navigate("/staff")}>
+        Back
+      </Button>
+      <Tabs activeKey={activeTab} onSelect={handleTabChange}>
+        <Tab eventKey="home" title="Up Point Excel">
+          <Tab.Content>
+            <Tab.Pane eventKey="home"></Tab.Pane>
+          </Tab.Content>
+        </Tab>
 
-        <Form.Group controlId="userId">
-          <Form.Label>รหัสามตัวสุดท้ายของนักศึกษา</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            name="userId"
-            value={userId}
-            onChange={handleUserIdChange}
-          >
-            <option>เลือกรหัสามตัวสุดท้ายของนักศึกษา</option>
-            {events.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.username}
-              </option>
+        <Tab eventKey="profile" title="Add Event">
+          <Tab.Content>
+            <Tab.Pane eventKey="profile"></Tab.Pane>
+          </Tab.Content>
+        </Tab>
+      </Tabs>
+      {activeTab === "home" && <UploadX />}
+      {activeTab === "profile" && <Addevent />}
+      {!showeditd && <Editpage data={id2} />}
+
+      <>
+        <h1 style={{ display: "flex", justifyContent: "center" }}>Event All</h1>
+        <Table striped bordered hover className="mt-4">
+          <thead>
+            <tr>
+              <th>ชื่อกิจกรรม</th>
+              <th>เวลาที่เปิดดูได้</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item) => (
+              <tr key={item.id}>
+                <td>{item.attributes.name}</td>
+                <td>
+                  {new Date(item.attributes.datetime).toLocaleString("en-GB")}
+                </td>
+                <td>
+                  <button
+                    variant="danger"
+                    className="mt-2"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    <span style={{ fontWeight: "bold" }}>Delete</span>
+                  </button>
+
+                  <button
+                    variant="danger"
+                    className="mt-2"
+                    onClick={() => handleEdit(item.id)}
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
             ))}
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group controlId="categoryId">
-          <Form.Label>เลือกวิชา</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            name="categoryId"
-            value={categoryId}
-            onChange={handleCategoryIdChange}
-          >
-            <option>เลือกวิชา</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.attributes.Subject}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group controlId="eventId">
-          <Form.Label>เลือกประเภท</Form.Label>
-          <Form.Select
-            aria-label="Default select example"
-            name="eventId"
-            value={eventId}
-            onChange={handleEventIdChange}
-          >
-            <option>เลือกประเภท</option>
-            {events2.map((event) => (
-              <option key={event.id} value={event.id}>
-                {event.attributes.name}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
-
-        <Form.Group controlId="comment">
-          <Form.Label>Comment:</Form.Label>
-          <Form.Control
-            type="text"
-            name="comment"
-            value={comment}
-            onChange={handleCommentChange}
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-        <Button variant="info" onClick={() => navigate("/staff")}>
-          Back
-        </Button>
-      </Form>
-    </div>
+          </tbody>
+        </Table>
+      </>
+    </>
   );
 };
 

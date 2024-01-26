@@ -70,7 +70,7 @@ function StudentPage() {
   return (
     <div style={containerStyle}>
       <h1 style={{ textAlign: "center" }}>{Nickname}</h1>
-       <h2>รายวิชา</h2>
+      <h2>รายวิชา</h2>
       <Button
         variant="danger"
         onClick={() => handleLogout()}
@@ -113,21 +113,21 @@ function StudentPage() {
                     >
                       View
                     </Button>
-                    <Button
-                      variant="info"
-                      onClick={() => setpass(true)}
-                      style={{
-                        position: "absolute",
-                        top: "350px",
-                        left: "1250px",
-                      }}
-                    >
-                      go Back
-                    </Button>
                   </Card.Body>
                 </Card>
               </li>
             ))}
+            <Button
+              variant="info"
+              onClick={() => setpass(true)}
+              style={{
+                position: "absolute",
+                top: "350px",
+                left: "1250px",
+              }}
+            >
+              go Back
+            </Button>
           </>
         )}
       </ul>
