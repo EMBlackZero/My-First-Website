@@ -13,6 +13,7 @@ import AddPage from "./PageAll/AddPage";
 import UploadX from "./PageAll/UploadX";
 import Addevent from "./PageAll/Addevent";
 import Editpage from "./PageAll/Editpage"
+import Deletepage from "./PageAll/Deletepage"
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +50,9 @@ const router = createBrowserRouter([
   {
     path: "/editpage",
     element: <Editpage />,
+  },{
+    path: "/deletepage",
+    element: <Deletepage />,
   },
 ]);
 

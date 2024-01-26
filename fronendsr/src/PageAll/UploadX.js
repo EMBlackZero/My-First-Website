@@ -29,7 +29,6 @@ const UploadFile = () => {
         config
       );
       setEvents2(response3.data.data.attributes.events.data);
-      console.log("dfgdfg", response3.data.data);
       setCategoryId(e.target.value);
     } catch (error) {
       console.error("Error fetching events data:", error);
@@ -38,13 +37,11 @@ const UploadFile = () => {
   };
 
   const handleEventIdChange = (e) => {
-
     setLoading(true);
     setEventId(e.target.value);
   };
 
   const handleFileChange = async (event) => {
-
     try {
       const selectedFile = event.target.files[0];
       const reader = new FileReader();
@@ -93,7 +90,6 @@ const UploadFile = () => {
 
     fetchData();
   }, [userName]);
-  console.log("hhhh", events);
 
   const postToStrapi = async () => {
     try {
@@ -115,7 +111,6 @@ const UploadFile = () => {
         const matchedUser = filteredEmails.find(
           (item) => item.email.slice(0, 3) === studentId.toString()
         );
-        console.log("ggg", matchedUser);
         if (matchedUser) {
           const userId = matchedUser.id;
 
@@ -157,14 +152,14 @@ const UploadFile = () => {
 
   return (
     <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    animation: "moveUp 2s forwards", // Add animation property
-    border: "2px solid black", // Add border for rectangular frame
-  }}
->
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        animation: "moveUp 2s forwards", // Add animation property
+        border: "2px solid black", // Add border for rectangular frame
+      }}
+    >
       {loading && <Spinner animation="border" role="status" />}
       <input type="file" onChange={handleFileChange} />
       <Form.Group controlId="categoryId">
@@ -203,11 +198,10 @@ const UploadFile = () => {
       <Button
         variant="info"
         onClick={postToStrapi}
-        disabled={!excelData || loading}
+        disabled={!loading}
       >
         Post to Strapi
       </Button>
-      
     </div>
   );
 };
