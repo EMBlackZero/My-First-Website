@@ -25,11 +25,12 @@ const YourComponent = () => {
       });
   }, []);
 
-  console.log(categories);
-
   const handleCategoryIdChange = (e) => {
     setCategoryId(e.target.value);
+
   };
+  console.log(categoryId);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +38,7 @@ const YourComponent = () => {
     const formData = {
       name: result,
       datetime: eventDateTime,
-      category: parseInt(categoryId),
+      categories: parseInt(categoryId),
     };
 
     try {
@@ -50,12 +51,12 @@ const YourComponent = () => {
           },
         }
       );
-      window.location.reload();
       console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error creating entry:", error);
       // Handle errors here (e.g., display an error message to the user)
     }
+    window.location.reload();
   };
 
   return (

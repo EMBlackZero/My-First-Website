@@ -107,9 +107,14 @@ function StudentPage() {
                 <Card>
                   <Card.Body>
                     <Card.Title>{sb.attributes.name}</Card.Title>
+                    <Card.Title>
+                      เปิดได้ก็ต่อเมื่อ{"  "}
+                      {new Date(sb.attributes.datetime).toLocaleString("en-GB")}
+                    </Card.Title>
                     <Button
                       variant="info"
                       onClick={() => handleid(sb.id, sb.attributes.Subject)}
+                      disabled={new Date(sb.attributes.datetime) >= new Date()}
                     >
                       View
                     </Button>
