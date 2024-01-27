@@ -2,13 +2,18 @@ import Modal from "react-bootstrap/Modal";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 function StaticExample(id) {
   const issid = id.data;
   console.log("id", id.data);
+  const navigate = useNavigate();
   const [result, setResult] = useState("");
   const [eventDateTime, setEventDateTime] = useState("");
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState();
+  const Role = localStorage.getItem("role");
+
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -16,6 +21,11 @@ function StaticExample(id) {
   };
 
   useEffect(() => {
+    if (Role !== "staff") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
     // Fetch categories when the component mounts
     axios
       .get("http://localhost:1337/api/categories", config)

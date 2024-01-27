@@ -10,6 +10,8 @@ const ViewPage = () => {
   const userName = localStorage.getItem("myname");
   const usersub = localStorage.getItem("mysub");
   const [datas, setDatas] = useState([]);
+  const Role = localStorage.getItem("role");
+
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -22,6 +24,11 @@ const ViewPage = () => {
   console.log(userName);
 
   useEffect(() => {
+    if (Role !== "student") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
     //เรียกข้อมูล
     axios
       .get(url, config)

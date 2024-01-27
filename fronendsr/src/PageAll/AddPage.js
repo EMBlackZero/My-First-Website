@@ -16,6 +16,10 @@ const CreateEntryForm = () => {
   const [id2, setid2] = useState([]);
   const [showeditd, setshowedit] = useState(true);
   const [showdelete, setshowdelete] = useState(true);
+  const userName = localStorage.getItem("myname");
+  const Role = localStorage.getItem("role");
+
+  console.log(userName);
 
   const handleTabChange = (key) => {
     setActiveTab(key);
@@ -26,6 +30,11 @@ const CreateEntryForm = () => {
     },
   };
   useEffect(() => {
+    if (Role !== "staff") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
     axios
       .get("http://localhost:1337/api/events?populate=*", config)
       .then(({ data }) => setData(data.data))
@@ -35,19 +44,33 @@ const CreateEntryForm = () => {
   }, []);
 
   const handleEdit = (id) => {
+    setActiveTab("");
     setid2(id);
     setshowedit(false);
   };
   const handleDelete = (id) => {
+    setActiveTab("");
     setid2(id);
     setshowdelete(false);
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("jwtToken");
+    axios.defaults.headers.common.Authorization = "";
+    navigate("/");
+  };
 
   return (
     <>
       <Button variant="info" onClick={() => navigate("/staff")}>
         Back
+      </Button>
+      <Button
+        variant="danger"
+        onClick={handleLogout}
+        style={{ position: "absolute", right: 0 }}
+      >
+        Logout
       </Button>
       <Tabs activeKey={activeTab} onSelect={handleTabChange}>
         <Tab eventKey="home" title="Up Point Excel">
@@ -85,21 +108,25 @@ const CreateEntryForm = () => {
                   {new Date(item.attributes.datetime).toLocaleString("en-GB")}
                 </td>
                 <td>
-                  <button
-                    variant="danger"
-                    className="mt-2"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    <span style={{ fontWeight: "bold" }}>Delete</span>
-                  </button>
+                  {userName == item.attributes.teacher && (
+                    <button
+                      variant="danger"
+                      className="mt-2"
+                      onClick={() => handleDelete(item.id)}
+                    >
+                      <span style={{ fontWeight: "bold" }}>Delete</span>
+                    </button>
+                  )}
 
-                  <button
-                    variant="danger"
-                    className="mt-2"
-                    onClick={() => handleEdit(item.id)}
-                  >
-                    Edit
-                  </button>
+                  {userName == item.attributes.teacher && (
+                    <button
+                      variant="danger"
+                      className="mt-2"
+                      onClick={() => handleEdit(item.id)}
+                    >
+                      Edit
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

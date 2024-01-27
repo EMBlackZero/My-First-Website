@@ -41,6 +41,10 @@
       "relation": "manyToOne",
       "target": "api::category.category",
       "inversedBy": "entries"
+    },
+    "teacher": {
+      "type": "string",
+      "required": true
     }
   }
 }

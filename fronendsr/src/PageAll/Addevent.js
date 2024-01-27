@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const YourComponent = () => {
   const [result, setResult] = useState("");
   const [eventDateTime, setEventDateTime] = useState("");
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState();
+  const userName = localStorage.getItem("myname");
+  const Role = localStorage.getItem("role");
+
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -14,6 +19,11 @@ const YourComponent = () => {
   };
 
   useEffect(() => {
+    if (Role !== "staff") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
     // Fetch categories when the component mounts
     axios
       .get("http://localhost:1337/api/categories", config)
@@ -27,10 +37,8 @@ const YourComponent = () => {
 
   const handleCategoryIdChange = (e) => {
     setCategoryId(e.target.value);
-
   };
   console.log(categoryId);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +47,7 @@ const YourComponent = () => {
       name: result,
       datetime: eventDateTime,
       categories: parseInt(categoryId),
+      teacher: userName,
     };
 
     try {

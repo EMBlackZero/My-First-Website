@@ -3,10 +3,13 @@ import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { type } from "@testing-library/user-event/dist/type";
+import { useNavigate } from "react-router-dom";
 
 function StaticExample(id) {
+  const navigate = useNavigate();
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
+  const Role = localStorage.getItem("role");
   const issid = id.data;
   console.log(issid);
   const config = {
@@ -15,14 +18,18 @@ function StaticExample(id) {
     },
   };
   useEffect(() => {
+    if (Role !== "staff") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
     axios
       .get(`http://localhost:1337/api/events/${issid}?populate=*`, config)
       .then(({ data }) => {
         setData2(data.data.attributes.entries.data.length);
-        if(data2!==0){
-            setData1(data.data.attributes.entries.data.map((d) => d.id));
+        if (data2 !== 0) {
+          setData1(data.data.attributes.entries.data.map((d) => d.id));
         }
-
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -72,11 +79,11 @@ function StaticExample(id) {
     >
       <Modal.Dialog>
         <Modal.Header>
-          <Modal.Title>ลบข้อevent</Modal.Title>
+          <Modal.Title>ลบกิจกรรม</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <p>Modal body text goes here.</p>
+          <p>หากข้างในมีข้อมูลจะทำการลบตกลงหรือไม่</p>
         </Modal.Body>
 
         <Modal.Footer>

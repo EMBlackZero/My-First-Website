@@ -26,18 +26,23 @@ function StaffPage() {
   const [search, setSearch] = useState("");
   const [pass, setpass] = useState(true);
   const userName = localStorage.getItem("myname");
+  const Role = localStorage.getItem("role");
+
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
     },
   };
   useEffect(() => {
-    axios
-      .get(
-        `http://localhost:1337/api/users?filters[username][$ne]=${userName}`,
-        config
-      )
-      .then(({ data }) => setEvents(data));
+    if (Role !== "staff") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
+    axios.get(`http://localhost:1337/api/users`, config).then(({ data }) => {
+      const filteredEmails = data.filter((item) => item.email.match(/^\d{2}/));
+      setEvents(filteredEmails);
+    });
     axios
       .get("http://localhost:1337/api/entries?populate=*", config)
       .then(({ data }) => setData(data.data))
@@ -59,38 +64,12 @@ function StaffPage() {
     navigate("/");
   };
 
-  const handleSelectChange = (event) => {
-    const selectedValue = event.target.value;
-
-    // Handle the selected value based on your requirements
-    switch (selectedValue) {
-      case "addPerson":
-        navigate("/addpage");
-        break;
-      case "uploadFile":
-        navigate("/uploadx");
-        break;
-      case "addEvent":
-        navigate("/addevent");
-        break;
-      default:
-        // Handle default case if needed
-        break;
-    }
-  };
-
   return (
     <div style={containerStyle}>
-      <h1 style={{ textAlign: "center" }}>Admin</h1>
-      <Form.Select
-        aria-label="Default select example"
-        onChange={handleSelectChange}
-      >
-        <option>ฟังชั่นเพิ่มเติม</option>
-        <option value="addPerson">Add 1 Person</option>
-        <option value="uploadFile">Upload File</option>
-        <option value="addEvent">Add Event</option>
-      </Form.Select>
+      <h1 style={{ textAlign: "center" }}>{userName}</h1>
+      <Button variant="success" onClick={() => navigate("/addpage")}>
+        Add Page
+      </Button>
       <Button
         variant="danger"
         onClick={handleLogout}
@@ -153,16 +132,16 @@ function StaffPage() {
                 .map((item) => (
                   <tr key={item.id}>
                     <td>
-                      {
-                        item.attributes.users_permissions_user.data.attributes
-                          .username??" "
-                      }
+                      {item.attributes.users_permissions_user.data.attributes
+                        .username ?? " "}
                     </td>
-                    <td>{item.attributes.category.data.attributes.Subject??" "}</td>
+                    <td>
+                      {item.attributes.category.data.attributes.Subject ?? " "}
+                    </td>
 
-                    <td>{item.attributes.result??" "}</td>
+                    <td>{item.attributes.result ?? " "}</td>
 
-                    <td>{item.attributes.event.data.attributes.name??" "}</td>
+                    <td>{item.attributes.event.data.attributes.name ?? " "}</td>
                     <td>
                       {item.attributes.seedate
                         ? new Date(item.attributes.seedate).toLocaleString(

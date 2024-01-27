@@ -19,6 +19,7 @@ function StudentPage() {
   const navigate = useNavigate();
   const userName = localStorage.getItem("myname");
   const Nickname = localStorage.getItem("mynickname");
+  const Role = localStorage.getItem("role");
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -27,7 +28,11 @@ function StudentPage() {
   };
 
   useEffect(() => {
-    //เก็บข้อมูล jwt ที่ได้จากการ login
+    if (Role !== "student") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
     //เรียกข้อมูล
     axios
       .get("http://localhost:1337/api/categories?populate=*", config)

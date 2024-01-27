@@ -16,6 +16,10 @@ function Datapage() {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
   const userName = localStorage.getItem("mystname");
+  const userName2 = localStorage.getItem("myname");
+  const Role = localStorage.getItem("role");
+
+
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -25,7 +29,11 @@ function Datapage() {
   console.log(userName);
 
   useEffect(() => {
-    //เก็บข้อมูล jwt ที่ได้จากการ login
+    if (Role !== "staff") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
 
     //เรียกข้อมูล
     axios
@@ -85,8 +93,9 @@ function Datapage() {
               <td>{data.attributes.result}</td>
               <td>{data.attributes.event.data.attributes.name}</td>
               <td>
-                {data.attributes.seedate ?new Date(data.attributes.seedate).toLocaleString("en-GB"):
-                  "Not View"}
+                {data.attributes.seedate
+                  ? new Date(data.attributes.seedate).toLocaleString("en-GB")
+                  : "Not View"}
               </td>
               <td
                 style={{
@@ -96,9 +105,14 @@ function Datapage() {
                 }}
               >
                 {data.attributes.summit ? "Submit" : "Not Submit"}
-                <Button variant="danger" onClick={() => handleDelete(data.id)}>
-                  <span style={{ fontWeight: "bold" }}>Delete</span>
-                </Button>
+                {userName2 == data.attributes.teacher && (
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(data.id)}
+                  >
+                    <span style={{ fontWeight: "bold" }}>Delete</span>
+                  </Button>
+                )}
               </td>
             </tr>
           ))}

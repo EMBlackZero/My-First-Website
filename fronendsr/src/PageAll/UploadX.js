@@ -14,7 +14,10 @@ const UploadFile = () => {
   const [loading, setLoading] = useState(false);
   const [eventId, setEventId] = useState();
   const [categoryId, setCategoryId] = useState();
+  const [data1, setData1] = useState([]);
+  const [data2, setData2] = useState([]);
   const userName = localStorage.getItem("myname");
+  const Role = localStorage.getItem("role");
   const navigate = useNavigate();
   const config = {
     headers: {
@@ -37,9 +40,32 @@ const UploadFile = () => {
   };
 
   const handleEventIdChange = (e) => {
+    console.log(e.target.value);
+    axios
+      .get(
+        `http://localhost:1337/api/events/${e.target.value}?populate=*`,
+        config
+      )
+      .then(({ data }) => {
+        setData2(data.data.attributes.entries.data.length);
+        if (data2 !== 0) {
+          setData1(data.data.attributes.entries.data.map((d) => d.id));
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     setLoading(true);
     setEventId(e.target.value);
   };
+
+  useEffect(() => {
+    if (Role !== "staff") {
+      window.localStorage.removeItem("jwtToken");
+      axios.defaults.headers.common.Authorization = "";
+      navigate("/");
+    }
+  });
 
   const handleFileChange = async (event) => {
     try {
@@ -103,7 +129,20 @@ const UploadFile = () => {
       }));
       setStdid(filteredstdid);
       console.log(stdid);
-
+      if (data2 !== 0) {
+        // ให้ใช้ Promise.all เพื่อรอให้ทุก request เสร็จสิ้น
+        data1.map((i) => {
+          try {
+            // ให้ใส่ await และใช้ async function
+            axios.delete(`http://localhost:1337/api/entries/${i}`, config);
+            console.log(`Entry with ID ${i} deleted successfully`);
+          } catch (error) {
+            console.error(
+              `Error deleting entry with ID ${i}: ${error.message}`
+            );
+          }
+        });
+      }
       for (const excelRow of excelData) {
         const studentId = excelRow[0];
         console.log(studentId);
@@ -122,6 +161,7 @@ const UploadFile = () => {
                 result: `${excelRow[1]}`,
                 comment: `${excelRow[2]}`,
                 users_permissions_user: parseInt(userId),
+                teacher: userName,
                 category: parseInt(categoryId),
                 event: parseInt(eventId),
               },
@@ -151,58 +191,74 @@ const UploadFile = () => {
   }, [postSuccess]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        animation: "moveUp 2s forwards", // Add animation property
-        border: "2px solid black", // Add border for rectangular frame
-      }}
-    >
-      {loading && <Spinner animation="border" role="status" />}
-      <input type="file" onChange={handleFileChange} />
-      <Form.Group controlId="categoryId">
-        <Form.Label>เลือกวิชา</Form.Label>
-        <Form.Select
-          aria-label="Default select example"
-          name="categoryId"
-          value={categoryId}
-          onChange={handleCategoryIdChange}
-        >
-          <option>เลือกวิชา</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.attributes.Subject}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
-
-      <Form.Group controlId="eventId">
-        <Form.Label>เลือกประเภท</Form.Label>
-        <Form.Select
-          aria-label="Default select example"
-          name="eventId"
-          value={eventId}
-          onChange={handleEventIdChange}
-        >
-          <option>เลือกประเภท</option>
-          {events2.map((event) => (
-            <option key={event.id} value={event.id}>
-              {event.attributes.name}
-            </option>
-          ))}
-        </Form.Select>
-      </Form.Group>
-      <Button
-        variant="info"
-        onClick={postToStrapi}
-        disabled={!loading}
+    <>
+      <h1
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
       >
-        Post to Strapi
-      </Button>
-    </div>
+        อัพไฟล์ขึ้นDataBase
+      </h1>
+      <h2
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          color: "red",
+        }}
+      >
+        ***โปรดระมัระวังในการเพิ่มไฟล์หากข้างใน(ประเภท)ที่เลือกมีข้อมูลจะทำการลบข้อมูลด้านใน***
+      </h2>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          animation: "moveUp 2s forwards", // Add animation property
+          border: "2px solid black", // Add border for rectangular frame
+        }}
+      >
+        {loading && <Spinner animation="border" role="status" />}
+        <input type="file" onChange={handleFileChange} />
+        <Form.Group controlId="categoryId">
+          <Form.Label>เลือกวิชา</Form.Label>
+          <Form.Select
+            aria-label="Default select example"
+            name="categoryId"
+            value={categoryId}
+            onChange={handleCategoryIdChange}
+          >
+            <option>เลือกวิชา</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.attributes.Subject}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group controlId="eventId">
+          <Form.Label>เลือกประเภท</Form.Label>
+          <Form.Select
+            aria-label="Default select example"
+            name="eventId"
+            value={eventId}
+            onChange={handleEventIdChange}
+          >
+            <option>เลือกประเภท</option>
+            {events2.map((event) => (
+              <option key={event.id} value={event.id}>
+                {event.attributes.name}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+        <Button variant="info" onClick={postToStrapi} disabled={!loading}>
+          Post to Strapi
+        </Button>
+      </div>
+    </>
   );
 };
 

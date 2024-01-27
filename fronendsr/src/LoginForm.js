@@ -8,6 +8,8 @@ const LoginForm = () => {
   const [username, setUsername] = useState("225");
   const [password, setPassword] = useState("123456");
   const [submitEnabled, setSubmitEnabled] = useState(true);
+  localStorage.setItem("role", '');
+
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
@@ -32,7 +34,7 @@ const LoginForm = () => {
       saveTokenToLocalStorage(result.data.jwt);
 
       const saveNameToLocalStorage = (Namee) => {
-        localStorage.setItem("myname", Namee.username); 
+        localStorage.setItem("myname", Namee.username);
         localStorage.setItem("mynickname", Namee.Nickname);
       };
       saveNameToLocalStorage(result.data.user);
@@ -52,11 +54,11 @@ const LoginForm = () => {
       // Step 4: Check user's role and navigate accordingly
       if (userResult.data.role) {
         if (userResult.data.role.name === "student") {
-          console.log(userResult.data.role.name);
+          localStorage.setItem("role", userResult.data.role.name);
           navigate("/student");
         }
         if (userResult.data.role.name === "staff") {
-          console.log(userResult.data.role.name);
+          localStorage.setItem("role", userResult.data.role.name);
           navigate("/staff");
         }
       }
