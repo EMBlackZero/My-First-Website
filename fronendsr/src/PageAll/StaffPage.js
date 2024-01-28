@@ -85,7 +85,7 @@ function StaffPage() {
               {/* onChange for search */}
               <Form.Control
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search contacts"
+                placeholder="Search ID"
               />
             </InputGroup>
           </Form>

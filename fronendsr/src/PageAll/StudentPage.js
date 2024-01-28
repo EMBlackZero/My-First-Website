@@ -1,7 +1,14 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { Container, Card, Button } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Button,
+  Table,
+  InputGroup,
+  Form,
+} from "react-bootstrap";
 import ViewPage from "./ViewPage";
 function StudentPage() {
   const containerStyle = {
@@ -17,6 +24,7 @@ function StudentPage() {
   const [entrys, setEntrys] = useState([]);
   const [pass, setpass] = useState(true);
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
   const userName = localStorage.getItem("myname");
   const Nickname = localStorage.getItem("mynickname");
   const Role = localStorage.getItem("role");
@@ -63,7 +71,7 @@ function StudentPage() {
     setpass(false);
   };
 
-  const handleid = (id) => {
+  const handleid = (id ) => {
     console.log("ID:", id);
     localStorage.setItem("myid", id); //setid
     navigate("/viewpage");
@@ -71,11 +79,28 @@ function StudentPage() {
     console.log(localStorage.getItem("myid"));
     console.log(localStorage.getItem("mysub"));
   };
+  const handleid2 = (id, subject ) => {
+    localStorage.setItem("myid", id); //setid
+    navigate("/viewpage");
+    localStorage.setItem("mysub", subject);
+    axios.get(`http://localhost:1337/api/entries/${id}/seedate`, config);
+  };
 
   return (
     <div style={containerStyle}>
       <h1 style={{ textAlign: "center" }}>{Nickname}</h1>
-      <h2>รายวิชา</h2>
+      <h2>
+        รายวิชา
+        <Form>
+          <InputGroup className="my-3">
+            {/* onChange for search */}
+            <Form.Control
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search Event"
+            />
+          </InputGroup>
+        </Form>
+      </h2>
       <Button
         variant="danger"
         onClick={() => handleLogout()}
@@ -84,7 +109,8 @@ function StudentPage() {
         Logout
       </Button>
       <ul>
-        {pass &&
+        {search.length === 0 &&
+          pass &&
           entrys.map((entry) => (
             <li key={entry.id}>
               <Card>
@@ -105,6 +131,7 @@ function StudentPage() {
               </Card>
             </li>
           ))}
+
         {!pass && (
           <>
             {selectedSculptor.map((sb) => (
@@ -118,7 +145,7 @@ function StudentPage() {
                     </Card.Title>
                     <Button
                       variant="info"
-                      onClick={() => handleid(sb.id, sb.attributes.Subject)}
+                      onClick={() => handleid(sb.id)}
                       disabled={new Date(sb.attributes.datetime) >= new Date()}
                     >
                       View
@@ -139,6 +166,56 @@ function StudentPage() {
               go Back
             </Button>
           </>
+        )}
+        {search.length > 0 && (
+          <Table striped bordered hover className="mt-4">
+            <thead>
+              <tr>
+                <th>ชื่อกิจกรรม</th>
+                <th>เปิดได้ก็ต่อเมื่อ</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entrys
+                .filter((item) => {
+                  return search.toLowerCase() === ""
+                    ? true 
+                    : item.attributes.events.data.some((event) =>
+                        event.attributes.name.includes(search)
+                      );
+                })
+                .map((item) => (
+                  <tr key={item.id}>
+                    {item.attributes.events.data.map((event) => (
+                      <React.Fragment key={event.id}>
+                        <td>{event.attributes.name}</td>
+                        <td>
+                          {new Date(event.attributes.datetime).toLocaleString(
+                            "en-GB"
+                          )}
+                        </td>
+                        <td>
+                          {
+                            <Button
+                              variant="info"
+                              onClick={() =>
+                                handleid2(event.id, item.attributes.Subject)
+                              }
+                              disabled={
+                                new Date(event.attributes.datetime) >= new Date()
+                              }
+                            >
+                              View
+                            </Button>
+                          }
+                        </td>
+                      </React.Fragment>
+                    ))}
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
         )}
       </ul>
     </div>
