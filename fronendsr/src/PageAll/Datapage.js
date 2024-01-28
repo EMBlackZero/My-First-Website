@@ -26,7 +26,6 @@ function Datapage() {
       // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
     },
   };
-  console.log(userName);
 
   useEffect(() => {
     if (Role !== "staff") {
@@ -51,7 +50,6 @@ function Datapage() {
       });
   }, []);
 
-  console.log(events);
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
     window.localStorage.removeItem("jwtToken");

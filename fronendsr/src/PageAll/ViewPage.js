@@ -1,6 +1,6 @@
 //student
 import React, { useEffect, useState } from "react";
-import { Card, Button, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -10,6 +10,7 @@ const ViewPage = () => {
   const userName = localStorage.getItem("myname");
   const usersub = localStorage.getItem("mysub");
   const [datas, setDatas] = useState([]);
+
   const Role = localStorage.getItem("role");
 
   const config = {
@@ -18,10 +19,7 @@ const ViewPage = () => {
       // สามารถเพิ่ม header อื่น ๆ ตามต้องการได้
     },
   };
-  const [selectedSculptor, setSelectedSculptor] = useState(null);
   const url = `http://localhost:1337/api/entries?populate[event][filters][id][$eq]=${userid}&populate[users_permissions_user][filters][username][$eq]=${userName}&populate[category][filters][Subject][$eq]=${usersub}`;
-
-  console.log(userName);
 
   useEffect(() => {
     if (Role !== "student") {
@@ -33,7 +31,6 @@ const ViewPage = () => {
     axios
       .get(url, config)
       .then(({ data }) => {
-        console.log("viwed", data);
         const filteredData = data.data.filter(
           (item) =>
             item.attributes.event.data !== null &&
@@ -47,16 +44,12 @@ const ViewPage = () => {
         // Handle the error, e.g., set an error state
       });
   }, []);
-  console.log("viwedata", datas);
+  useEffect(() => {
+    datas.forEach((data) => {
+      axios.get(`http://localhost:1337/api/entries/${data.id}/seedate`, config);
+    });
+  }, [datas]);
 
-  const handleLogout = () => {
-    // Remove JWT Token from Local Storage
-    window.localStorage.removeItem("jwtToken");
-    // Clear Authorization Header in Axios Defaults
-    axios.defaults.headers.common.Authorization = "";
-    // Navigate to the "/" path (adjust this if using a different routing library)
-    navigate("/");
-  };
   const Summitbutthon = (data) => {
     axios.get(`http://localhost:1337/api/entries/${data}/summit`, config);
     window.location.reload();
@@ -65,6 +58,17 @@ const ViewPage = () => {
   return (
     <>
       <h1>คะแนน</h1>
+      <Button
+        variant="info"
+        onClick={() => navigate("/student")}
+        style={{
+          position: "absolute",
+          top: "350px",
+          left: "1250px",
+        }}
+      >
+        Back
+      </Button>
       <Table striped bordered hover className="mt-4">
         <thead>
           <tr>
@@ -97,17 +101,6 @@ const ViewPage = () => {
             </tr>
           ))}
         </tbody>
-        <Button
-          variant="info"
-          onClick={() => navigate("/student")}
-          style={{
-            position: "absolute",
-            top: "350px",
-            left: "1250px",
-          }}
-        >
-          Back
-        </Button>
       </Table>
     </>
   );

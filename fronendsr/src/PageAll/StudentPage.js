@@ -2,14 +2,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
-  Container,
   Card,
   Button,
   Table,
   InputGroup,
   Form,
 } from "react-bootstrap";
-import ViewPage from "./ViewPage";
 function StudentPage() {
   const containerStyle = {
     backgroundColor: "#f0f0f0",
@@ -25,7 +23,6 @@ function StudentPage() {
   const [pass, setpass] = useState(true);
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  const userName = localStorage.getItem("myname");
   const Nickname = localStorage.getItem("mynickname");
   const Role = localStorage.getItem("role");
   const config = {
@@ -53,7 +50,6 @@ function StudentPage() {
       });
   }, []);
 
-  console.log("data", entrys);
   const handleLogout = () => {
     // Remove JWT Token from Local Storage
     window.localStorage.removeItem("jwtToken");
@@ -66,24 +62,17 @@ function StudentPage() {
   const handleViewDetails = (sculptor, subject) => {
     setSelectedSculptor(sculptor);
     localStorage.setItem("mysub", subject);
-    console.log(localStorage.getItem("myid"));
-    console.log(localStorage.getItem("mysub"));
     setpass(false);
   };
 
-  const handleid = (id ) => {
-    console.log("ID:", id);
+  const handleid = (id) => {
     localStorage.setItem("myid", id); //setid
     navigate("/viewpage");
-    axios.get(`http://localhost:1337/api/entries/${id}/seedate`, config);
-    console.log(localStorage.getItem("myid"));
-    console.log(localStorage.getItem("mysub"));
   };
-  const handleid2 = (id, subject ) => {
+  const handleid2 = (id, subject) => {
     localStorage.setItem("myid", id); //setid
     navigate("/viewpage");
     localStorage.setItem("mysub", subject);
-    axios.get(`http://localhost:1337/api/entries/${id}/seedate`, config);
   };
 
   return (
@@ -180,7 +169,7 @@ function StudentPage() {
               {entrys
                 .filter((item) => {
                   return search.toLowerCase() === ""
-                    ? true 
+                    ? true
                     : item.attributes.events.data.some((event) =>
                         event.attributes.name.includes(search)
                       );
@@ -203,7 +192,8 @@ function StudentPage() {
                                 handleid2(event.id, item.attributes.Subject)
                               }
                               disabled={
-                                new Date(event.attributes.datetime) >= new Date()
+                                new Date(event.attributes.datetime) >=
+                                new Date()
                               }
                             >
                               View

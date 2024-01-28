@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
-import { useParams, useNavigate } from "react-router-dom";
-import { Card, Form, Button, Table, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import {Card, Form, Button, Spinner } from "react-bootstrap";
 
 const UploadFile = () => {
   const [excelData, setExcelData] = useState(null);
@@ -40,7 +40,6 @@ const UploadFile = () => {
   };
 
   const handleEventIdChange = (e) => {
-    console.log(e.target.value);
     axios
       .get(
         `http://localhost:1337/api/events/${e.target.value}?populate=*`,
@@ -145,7 +144,6 @@ const UploadFile = () => {
       }
       for (const excelRow of excelData) {
         const studentId = excelRow[0];
-        console.log(studentId);
 
         const matchedUser = filteredEmails.find(
           (item) => item.email.slice(0, 3) === studentId.toString()

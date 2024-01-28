@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 function StaticExample(id) {
   const issid = id.data;
-  console.log("id", id.data);
   const navigate = useNavigate();
   const [result, setResult] = useState("");
   const [eventDateTime, setEventDateTime] = useState("");
@@ -37,7 +36,6 @@ function StaticExample(id) {
       });
   }, []);
 
-  console.log(categories);
 
   const handleCategoryIdChange = (e) => {
     setCategoryId(e.target.value);
@@ -64,7 +62,6 @@ function StaticExample(id) {
         }
       );
       window.location.reload();
-      console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error creating entry:", error);
       // Handle errors here (e.g., display an error message to the user)

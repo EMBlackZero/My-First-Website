@@ -2,7 +2,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
-  Container,
   Card,
   Button,
   Form,
@@ -24,7 +23,6 @@ function StaffPage() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
-  const [pass, setpass] = useState(true);
   const userName = localStorage.getItem("myname");
   const Role = localStorage.getItem("role");
 
@@ -51,7 +49,6 @@ function StaffPage() {
       });
   }, []);
 
-  console.log(data);
 
   const handleViewDetails = (stname) => {
     localStorage.setItem("mystname", stname);

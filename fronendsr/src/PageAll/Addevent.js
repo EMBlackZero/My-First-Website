@@ -38,7 +38,6 @@ const YourComponent = () => {
   const handleCategoryIdChange = (e) => {
     setCategoryId(e.target.value);
   };
-  console.log(categoryId);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +59,6 @@ const YourComponent = () => {
           },
         }
       );
-      console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error creating entry:", error);
       // Handle errors here (e.g., display an error message to the user)

@@ -11,7 +11,6 @@ function StaticExample(id) {
   const [data2, setData2] = useState([]);
   const Role = localStorage.getItem("role");
   const issid = id.data;
-  console.log(issid);
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -36,9 +35,7 @@ function StaticExample(id) {
       });
   }, []);
 
-  useEffect(() => {
-    console.log("B", data2);
-  }, [data2]);
+
 
   const handleDelete = (e) => {
     window.location.reload();

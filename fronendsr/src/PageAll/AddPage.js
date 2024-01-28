@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Button, Tab, Tabs, Table } from "react-bootstrap";
+import { Button, Tab, Tabs, Table } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,14 +12,12 @@ const CreateEntryForm = () => {
   const [activeTab, setActiveTab] = useState("home");
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [id1, setid1] = useState([]);
   const [id2, setid2] = useState([]);
   const [showeditd, setshowedit] = useState(true);
   const [showdelete, setshowdelete] = useState(true);
   const userName = localStorage.getItem("myname");
   const Role = localStorage.getItem("role");
 
-  console.log(userName);
 
   const handleTabChange = (key) => {
     setActiveTab(key);
