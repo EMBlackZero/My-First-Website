@@ -1,6 +1,6 @@
 //student
 import React, { useEffect, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, Table, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -56,7 +56,7 @@ const ViewPage = () => {
   };
 
   return (
-    <>
+    <Container>
       <h1>คะแนน</h1>
       <Button
         variant="info"
@@ -94,6 +94,7 @@ const ViewPage = () => {
                   onClick={() => Summitbutthon(data.id)}
                   variant={data.attributes.summit ? "success" : "danger"}
                   className="mt-2" // Add additional Bootstrap classes for spacing if needed
+                  disabled={data.attributes.summit === true}
                 >
                   <span style={{ fontWeight: "bold" }}>Summit Point</span>
                 </Button>
@@ -102,7 +103,7 @@ const ViewPage = () => {
           ))}
         </tbody>
       </Table>
-    </>
+    </Container>
   );
 };
 

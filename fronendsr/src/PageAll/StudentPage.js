@@ -1,13 +1,8 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  Button,
-  Table,
-  InputGroup,
-  Form,
-} from "react-bootstrap";
+import "../CSSAll/stpage.css";
+import { Card, Button, Table, InputGroup, Form } from "react-bootstrap";
 function StudentPage() {
   const containerStyle = {
     backgroundColor: "#f0f0f0",
@@ -76,8 +71,8 @@ function StudentPage() {
   };
 
   return (
-    <div style={containerStyle}>
-      <h1 style={{ textAlign: "center" }}>{Nickname}</h1>
+    <div className="stpage">
+      <h1 >{Nickname}</h1>
       <h2>
         รายวิชา
         <Form>

@@ -3,12 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import "./CSSAll/LoginCss.css";
 const LoginForm = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("225");
   const [password, setPassword] = useState("123456");
   const [submitEnabled, setSubmitEnabled] = useState(true);
-  localStorage.setItem("role", '');
+  localStorage.setItem("role", "");
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -72,14 +73,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
+    <div className="login">
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicUsername">
           <Form.Label>Username</Form.Label>

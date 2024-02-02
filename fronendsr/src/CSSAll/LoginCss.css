@@ -1,0 +1,45 @@
+/* LoginCss.css */
+
+.login {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Style for form labels */
+  .form-label {
+    font-weight: bold;
+  }
+  
+  /* Style for form input fields */
+  .form-control {
+    margin-bottom: 15px;
+  }
+  
+  /* Style for submit button */
+  .btn-primary {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  /* Optional: Add hover effect on the submit button */
+  .btn-primary:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  /* Optional: Add custom styling for disabled submit button */
+  .btn-primary:disabled {
+    background-color: #b0c4de;
+    cursor: not-allowed;
+  }
+  
