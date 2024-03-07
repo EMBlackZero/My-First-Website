@@ -1,13 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  Button,
-  Form,
-  InputGroup,
-  Table,
-} from "react-bootstrap";
+import { Card, Button, Form, InputGroup, Table } from "react-bootstrap";
 
 function StaffPage() {
   const containerStyle = {
@@ -49,7 +43,6 @@ function StaffPage() {
       });
   }, []);
 
-
   const handleViewDetails = (stname) => {
     localStorage.setItem("mystname", stname);
     navigate("/datapage");
@@ -70,7 +63,7 @@ function StaffPage() {
       <Button
         variant="danger"
         onClick={handleLogout}
-        style={{ position: "absolute", top: "40px", left: "1340px" }}
+        style={{ position: "absolute", top: "40px", left: "1100px" }}
       >
         Logout
       </Button>

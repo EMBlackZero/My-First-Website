@@ -64,7 +64,7 @@ const ViewPage = () => {
         style={{
           position: "absolute",
           top: "350px",
-          left: "1250px",
+          left: "1100px",
         }}
       >
         Back

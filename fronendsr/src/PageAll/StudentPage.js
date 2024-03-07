@@ -72,7 +72,7 @@ function StudentPage() {
 
   return (
     <div className="stpage">
-      <h1 >{Nickname}</h1>
+      <h1>{Nickname}</h1>
       <h2>
         รายวิชา
         <Form>
@@ -88,7 +88,7 @@ function StudentPage() {
       <Button
         variant="danger"
         onClick={() => handleLogout()}
-        style={{ position: "absolute", top: "50px", left: "1240px" }}
+        style={{ position: "absolute", top: "50px", left: "1100px" }}
       >
         Logout
       </Button>
@@ -144,7 +144,7 @@ function StudentPage() {
               style={{
                 position: "absolute",
                 top: "350px",
-                left: "1250px",
+                left: "1100px",
               }}
             >
               go Back

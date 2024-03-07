@@ -5,12 +5,10 @@ import axios from "axios";
 import { type } from "@testing-library/user-event/dist/type";
 import { useNavigate } from "react-router-dom";
 
-function StaticExample(id) {
+function StaticExample() {
   const navigate = useNavigate();
   const [data1, setData1] = useState([]);
   const [data2, setData2] = useState([]);
-  const Role = localStorage.getItem("role");
-  const issid = id.data;
   const config = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
